@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free BMI Calculator - Calculate Body Mass Index Online - Narmada Tools</title>
+  <meta name="description" content="Calculate your Body Mass Index (BMI) using metric or imperial measurements. View health classifications based on WHO parameters. Private and offline.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/utility.html" class="hover:text-blue-650 transition-colors">Utility Calculators</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">BMI Calculator</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Input Area (2 columns) -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="activity" class="text-cyan-650 w-5 h-5"></i>
+            <span>BMI Calculator</span>
+          </h1>
+
+          <!-- Unit Selector tabs -->
+          <div class="flex border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+            <button onclick="switchUnit('metric')" id="btn-metric" class="px-4 py-2 text-xs font-bold rounded-xl bg-cyan-600 text-white transition-colors mr-2">Metric Units (kg, cm)</button>
+            <button onclick="switchUnit('imperial')" id="btn-imperial" class="px-4 py-2 text-xs font-bold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-950 transition-colors">Imperial Units (lbs, feet)</button>
+          </div>
+
+          <div class="space-y-4">
+            
+            <!-- Metric Inputs Container -->
+            <div id="unit-metric-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Height (cm)</label>
+                <input type="number" id="bmi-cm" value="175" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="calculateBMI()">
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Weight (kg)</label>
+                <input type="number" id="bmi-kg" value="70" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 dark:text-slate-100" oninput="calculateBMI()">
+              </div>
+            </div>
+
+            <!-- Imperial Inputs Container -->
+            <div id="unit-imperial-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Height</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="number" id="bmi-ft" value="5" placeholder="feet" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 dark:text-slate-100" oninput="calculateBMI()">
+                  <input type="number" id="bmi-in" value="9" placeholder="inches" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 dark:text-slate-100" oninput="calculateBMI()">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Weight (lbs)</label>
+                <input type="number" id="bmi-lbs" value="154" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 dark:text-slate-100" oninput="calculateBMI()">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BMI Gauge Card -->
+        <div id="bmi-results-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+          <h3 class="font-bold text-base flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <i data-lucide="activity" class="text-cyan-600 w-4 h-4"></i>
+            <span>Results Classification</span>
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Numerical score -->
+            <div class="md:col-span-1 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-850 text-center flex flex-col justify-center">
+              <span class="text-xs uppercase tracking-wider font-bold text-slate-450">Your BMI Score</span>
+              <span class="text-4xl font-black text-slate-800 dark:text-white mt-1 block" id="bmi-val">22.9</span>
+            </div>
+
+            <!-- Visual WHO scale -->
+            <div class="md:col-span-2 space-y-4">
+              <div class="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-500">
+                <span>Category:</span>
+                <span id="bmi-category" class="text-emerald-500">Normal Weight</span>
+              </div>
+              
+              <!-- WHO Gauge bar -->
+              <div class="relative w-full h-4 rounded-full bg-slate-100 dark:bg-slate-955 overflow-hidden flex">
+                <div class="bg-blue-400 h-full" style="width: 25%" title="Underweight (< 18.5)"></div>
+                <div class="bg-green-500 h-full" style="style: width: 25%" style="width: 25%" title="Normal (18.5 - 24.9)"></div>
+                <div class="bg-amber-500 h-full" style="width: 25%" title="Overweight (25 - 29.9)"></div>
+                <div class="bg-red-500 h-full" style="width: 25%" title="Obese (>= 30)"></div>
+              </div>
+
+              <!-- Indicators under scale -->
+              <div class="grid grid-cols-4 text-[10px] text-center text-slate-400 font-bold uppercase">
+                <span>&lt; 18.5</span>
+                <span>18.5 - 24.9</span>
+                <span>25 - 29.9</span>
+                <span>&ge; 30</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Sidebar -->
+      <div class="space-y-6">
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let activeUnit = "metric";
+
+    function switchUnit(unit) {
+      activeUnit = unit;
+      const btnMetric = document.getElementById("btn-metric");
+      const btnImperial = document.getElementById("btn-imperial");
+      
+      const containerMetric = document.getElementById("unit-metric-container");
+      const containerImperial = document.getElementById("unit-imperial-container");
+
+      if (unit === "metric") {
+        btnMetric.className = "px-4 py-2 text-xs font-bold rounded-xl bg-cyan-600 text-white transition-colors mr-2";
+        btnImperial.className = "px-4 py-2 text-xs font-bold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-660 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-950 transition-colors";
+        containerMetric.classList.remove("hidden");
+        containerImperial.classList.add("hidden");
+      } else {
+        btnImperial.className = "px-4 py-2 text-xs font-bold rounded-xl bg-cyan-600 text-white transition-colors";
+        btnMetric.className = "px-4 py-2 text-xs font-bold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-660 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-955 transition-colors mr-2";
+        containerImperial.classList.remove("hidden");
+        containerMetric.classList.add("hidden");
+      }
+
+      calculateBMI();
+    }
+
+    function calculateBMI() {
+      let bmi = 0;
+      
+      if (activeUnit === "metric") {
+        const cm = parseFloat(document.getElementById("bmi-cm").value) || 0;
+        const kg = parseFloat(document.getElementById("bmi-kg").value) || 0;
+        
+        if (cm > 0 && kg > 0) {
+          const heightM = cm / 100;
+          bmi = kg / (heightM * heightM);
+        }
+      } else {
+        // Imperial
+        const ft = parseFloat(document.getElementById("bmi-ft").value) || 0;
+        const inches = parseFloat(document.getElementById("bmi-in").value) || 0;
+        const lbs = parseFloat(document.getElementById("bmi-lbs").value) || 0;
+        
+        const totalInches = (ft * 12) + inches;
+        if (totalInches > 0 && lbs > 0) {
+          bmi = (lbs / (totalInches * totalInches)) * 703;
+        }
+      }
+
+      if (bmi <= 0) {
+        document.getElementById("bmi-results-card").classList.add("hidden");
+        return;
+      }
+
+      // Format output
+      const roundedBmi = bmi.toFixed(1);
+      document.getElementById("bmi-val").innerText = roundedBmi;
+
+      // Classify
+      const cat = document.getElementById("bmi-category");
+      if (bmi < 18.5) {
+        cat.innerText = "Underweight (< 18.5)";
+        cat.className = "text-blue-500 font-bold";
+      } else if (bmi < 25) {
+        cat.innerText = "Normal Weight (18.5 - 24.9)";
+        cat.className = "text-green-500 font-bold";
+      } else if (bmi < 30) {
+        cat.innerText = "Overweight (25 - 29.9)";
+        cat.className = "text-amber-500 font-bold";
+      } else {
+        cat.innerText = "Obese (>= 30)";
+        cat.className = "text-red-500 font-bold";
+      }
+
+      document.getElementById("bmi-results-card").classList.remove("hidden");
+      
+      window.trackToolEvent("bmi-calculator", "calculate");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      calculateBMI();
+    });
+  </script>
+</body>
+</html>

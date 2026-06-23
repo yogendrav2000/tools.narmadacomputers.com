@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Loan EMI Calculator - Amortization Table Online - Narmada Tools</title>
+  <meta name="description" content="Calculate monthly loan EMIs, interest payable, and display an amortization schedule list offline. Free and private.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/utility.html" class="hover:text-blue-650 transition-colors">Utility Calculators</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">EMI Calculator</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Inputs -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="wallet" class="text-cyan-600 w-5 h-5"></i>
+            <span>EMI Calculator</span>
+          </h1>
+
+          <div class="space-y-4">
+            <!-- Loan Principal -->
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Loan Amount ($)</label>
+              <input type="number" id="emi-principal" value="100000" class="w-full px-4 py-2.5 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="calculateEMI()">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Interest Rate -->
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-505 dark:text-slate-400 mb-2">Interest Rate (% p.a.)</label>
+                <input type="number" id="emi-rate" value="8.5" step="0.1" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="calculateEMI()">
+              </div>
+
+              <!-- Tenure -->
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-505 dark:text-slate-400 mb-2">Loan Tenure (Years)</label>
+                <input type="number" id="emi-tenure" value="20" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="calculateEMI()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amortization Schedule List -->
+        <div id="emi-amortization-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h3 class="font-bold text-base mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <i data-lucide="table" class="text-cyan-600 w-4 h-4"></i>
+            <span>Annual Amortization Schedule</span>
+          </h3>
+
+          <div class="overflow-x-auto max-h-96">
+            <table class="w-full text-left text-xs text-slate-500 dark:text-slate-400">
+              <thead class="bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 font-bold uppercase">
+                <tr>
+                  <th class="p-3">Year</th>
+                  <th class="p-3">Principal Repaid</th>
+                  <th class="p-3">Interest Paid</th>
+                  <th class="p-3">Remaining Balance</th>
+                </tr>
+              </thead>
+              <tbody id="emi-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Sidebar -->
+      <div class="space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
+          <h3 class="font-bold text-base border-b border-slate-100 dark:border-slate-800 pb-2">Repayment Overview</h3>
+          
+          <div class="space-y-3.5 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Monthly EMI Payment:</span>
+              <span class="font-black text-cyan-655" id="res-monthly-emi">$867.82</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Principal Amount:</span>
+              <span class="font-bold text-slate-700 dark:text-slate-350" id="res-principal">$100,000.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Total Interest Payable:</span>
+              <span class="font-bold text-slate-700 dark:text-slate-350" id="res-total-interest">$108,277.60</span>
+            </div>
+            <div class="flex justify-between border-t border-slate-100 dark:border-slate-800 pt-3 text-base font-black text-slate-850 dark:text-white">
+              <span>Total Repayment Amount:</span>
+              <span id="res-total-payment">$208,277.60</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function calculateEMI() {
+      const principal = parseFloat(document.getElementById("emi-principal").value) || 0;
+      const rateAnnum = parseFloat(document.getElementById("emi-rate").value) || 0;
+      const tenureYears = parseFloat(document.getElementById("emi-tenure").value) || 0;
+
+      if (principal <= 0 || rateAnnum <= 0 || tenureYears <= 0) {
+        document.getElementById("emi-amortization-card").classList.add("hidden");
+        return;
+      }
+
+      const rateMonthly = (rateAnnum / 12) / 100;
+      const tenureMonths = tenureYears * 12;
+
+      // EMI Formula calculation
+      const emi = principal * rateMonthly * Math.pow(1 + rateMonthly, tenureMonths) / (Math.pow(1 + rateMonthly, tenureMonths) - 1);
+      const totalPayment = emi * tenureMonths;
+      const totalInterest = totalPayment - principal;
+
+      // Update Summary UI
+      document.getElementById("res-monthly-emi").innerText = `$${emi.toFixed(2)}`;
+      document.getElementById("res-principal").innerText = `$${principal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById("res-total-interest").innerText = `$${totalInterest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById("res-total-payment").innerText = `$${totalPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+      // Build Amortization Schedule (annual breakdown)
+      let balance = principal;
+      let yearlyData = [];
+      
+      for (let year = 1; year <= tenureYears; year++) {
+        let yearlyPrincipal = 0;
+        let yearlyInterest = 0;
+        
+        for (let month = 1; month <= 12; month++) {
+          const interestPaid = balance * rateMonthly;
+          const principalPaid = emi - interestPaid;
+          balance -= principalPaid;
+          
+          yearlyPrincipal += principalPaid;
+          yearlyInterest += interestPaid;
+        }
+
+        yearlyData.push({
+          year: year,
+          principalPaid: yearlyPrincipal,
+          interestPaid: yearlyInterest,
+          balance: Math.max(0, balance)
+        });
+      }
+
+      const tbody = document.getElementById("emi-tbody");
+      tbody.innerHTML = yearlyData.map(data => {
+        return `
+          <tr class="border-b border-slate-100 dark:border-slate-900 last:border-b-0">
+            <td class="p-3 font-semibold text-slate-700 dark:text-slate-350">Year ${data.year}</td>
+            <td class="p-3">$${data.principalPaid.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td class="p-3">$${data.interestPaid.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td class="p-3">$${data.balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("emi-amortization-card").classList.remove("hidden");
+      
+      window.trackToolEvent("emi-calculator", "calculate");
+    }
+
+    // Trigger initial load
+    window.addEventListener("DOMContentLoaded", () => {
+      calculateEMI();
+    });
+  </script>
+</body>
+</html>

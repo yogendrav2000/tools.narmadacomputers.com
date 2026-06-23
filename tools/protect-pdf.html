@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free PDF Password Protector - Encrypt PDF Online - Narmada Tools</title>
+  <meta name="description" content="Secure your PDF files with password protection and 128-bit encryption locally in your browser. 100% private, no server uploads.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/pdf.html" class="hover:text-blue-650 transition-colors">PDF Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Protect PDF</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Protect interface (2 columns) -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Upload Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="shield-alert" class="text-rose-600 w-5 h-5"></i>
+            <span>Protect PDF Document</span>
+          </h1>
+
+          <div id="drop-zone" class="border-2 border-dashed border-slate-250 dark:border-slate-800 rounded-xl p-8 text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-950/30 transition-all flex flex-col items-center justify-center relative min-h-48" onclick="triggerFileSelect()">
+            <input type="file" id="pdf-input" accept="application/pdf" class="hidden" onchange="handleFileSelect(event)">
+            
+            <div id="upload-prompt" class="space-y-3">
+              <div class="w-12 h-12 bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="file-plus" class="w-6 h-6"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">Drag & drop your PDF file here, or click to upload</p>
+              <p class="text-xs text-slate-450 dark:text-slate-500">Supports PDF files up to 50MB. Encrypted locally.</p>
+            </div>
+            
+            <div id="upload-preview" class="hidden w-full h-full flex flex-col items-center justify-center p-2 relative">
+              <div class="w-12 h-12 bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                <i data-lucide="lock" class="w-6 h-6"></i>
+              </div>
+              <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 truncate max-w-xs" id="file-name"></h4>
+              <p class="text-xs text-slate-400 mt-1" id="file-size"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Encryption Options Card -->
+        <div id="encrypt-options-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+          <h3 class="font-bold text-base flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <i data-lucide="key" class="text-rose-600 w-4 h-4"></i>
+            <span>Set Security Password</span>
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Password Input -->
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-450 mb-2">User Access Password</label>
+                <div class="relative">
+                  <input type="password" id="pdf-password" placeholder="Enter password to unlock PDF" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 dark:text-slate-100">
+                  <button type="button" onclick="togglePassVisibility()" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-655"><i data-lucide="eye" class="w-4 h-4" id="pass-eye-icon"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Encryption Specs -->
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-xs space-y-2 border border-slate-100 dark:border-slate-900">
+              <span class="font-bold block text-slate-700 dark:text-slate-300">Encryption Standard</span>
+              <div class="flex justify-between">
+                <span>Algorithm:</span>
+                <span class="font-semibold text-slate-600 dark:text-slate-400">RC4 (128-bit compliant)</span>
+              </div>
+              <div class="flex justify-between text-emerald-600 dark:text-emerald-400 font-bold">
+                <span>Security State:</span>
+                <span>Self-contained</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
+            <button onclick="resetProtector()" class="px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-xs font-semibold rounded-xl transition-colors">Choose Another</button>
+            <button onclick="protectPdf()" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-rose-500/10">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+              <span>Encrypt & Download</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Processing Spinner Overlay -->
+  <div id="loading-overlay" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-xs text-center border border-slate-200 dark:border-slate-800">
+      <div class="w-12 h-12 border-4 border-rose-650 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">Encrypting PDF...</p>
+      <p class="text-xs text-slate-450 mt-1">Processing locally. Please wait.</p>
+    </div>
+  </div>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+
+  <!-- ES6 script module to load encryptPDF client side -->
+  <script type="module">
+    import { encryptPDF } from "https://cdn.jsdelivr.net/npm/@pdfsmaller/pdf-encrypt-lite/+esm";
+    
+    // Bind to window to allow regular script access
+    window.encryptPdfFunc = encryptPDF;
+  </script>
+
+  <script>
+    let activeFile = null;
+
+    function triggerFileSelect() {
+      if (!activeFile) {
+        document.getElementById("pdf-input").click();
+      }
+    }
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      processPdfFile(file);
+    }
+
+    // Drag & drop
+    const dropZone = document.getElementById("drop-zone");
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("bg-rose-50/40", "dark:bg-rose-950/20");
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("bg-rose-50/40", "dark:bg-rose-950/20");
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("bg-rose-50/40", "dark:bg-rose-950/20");
+      const file = e.dataTransfer.files[0];
+      if (file && file.type === "application/pdf") {
+        processPdfFile(file);
+      }
+    });
+
+    function processPdfFile(file) {
+      activeFile = file;
+      document.getElementById("file-name").innerText = file.name;
+      document.getElementById("file-size").innerText = window.formatSize(file.size);
+      
+      document.getElementById("upload-prompt").classList.add("hidden");
+      document.getElementById("upload-preview").classList.remove("hidden");
+      document.getElementById("encrypt-options-card").classList.remove("hidden");
+    }
+
+    function resetProtector() {
+      activeFile = null;
+      document.getElementById("pdf-input").value = "";
+      document.getElementById("pdf-password").value = "";
+      document.getElementById("upload-preview").classList.add("hidden");
+      document.getElementById("upload-prompt").classList.remove("hidden");
+      document.getElementById("encrypt-options-card").classList.add("hidden");
+    }
+
+    function togglePassVisibility() {
+      const input = document.getElementById("pdf-password");
+      const icon = document.getElementById("pass-eye-icon");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.setAttribute("data-lucide", "eye-off");
+      } else {
+        input.type = "password";
+        icon.setAttribute("data-lucide", "eye");
+      }
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    async function protectPdf() {
+      if (!activeFile) return;
+
+      const password = document.getElementById("pdf-password").value.trim();
+      if (!password) {
+        alert("Please enter a security password to encrypt the PDF.");
+        return;
+      }
+
+      document.getElementById("loading-overlay").classList.remove("hidden");
+
+      try {
+        const bytes = await activeFile.arrayBuffer();
+        const uint8Bytes = new Uint8Array(bytes);
+
+        // Call client-side encryption function from ES module
+        if (!window.encryptPdfFunc) {
+          alert("Encryption modules are loading. Please wait a second and try again.");
+          document.getElementById("loading-overlay").classList.add("hidden");
+          return;
+        }
+
+        const encryptedBytes = await window.encryptPdfFunc(uint8Bytes, password);
+
+        const blob = new Blob([encryptedBytes], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `protected-${activeFile.name}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        document.getElementById("loading-overlay").classList.add("hidden");
+
+        if (window.confetti) {
+          window.confetti({ particleCount: 50, spread: 60, colors: ["#f43f5e", "#fb7185"] });
+        }
+        window.trackToolEvent("protect-pdf", "encrypt");
+      } catch (err) {
+        console.error("PDF Encryption failure: ", err);
+        alert("Failed to encrypt PDF file.");
+        document.getElementById("loading-overlay").classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>

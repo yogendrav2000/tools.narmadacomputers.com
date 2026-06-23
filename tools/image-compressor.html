@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Image Compressor - Compress JPEG, PNG, WEBP - Narmada Tools</title>
+  <meta name="description" content="Reduce image file sizes online locally in your browser. Supports JPG, PNG, and WebP compression with live ratio stats. 100% private.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+      
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/image.html" class="hover:text-blue-650 transition-colors">Image Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Image Compressor</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Compression Interface -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Upload Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="minimize-2" class="text-emerald-600 w-5 h-5"></i>
+            <span>Image Compressor</span>
+          </h1>
+
+          <div id="drop-zone" class="border-2 border-dashed border-slate-250 dark:border-slate-800 rounded-xl p-8 text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-950/30 transition-all flex flex-col items-center justify-center relative min-h-60" onclick="triggerFileSelect()">
+            <input type="file" id="image-input" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleFileSelect(event)">
+            
+            <div id="upload-prompt" class="space-y-3">
+              <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">Drag & drop your image file here, or click to upload</p>
+              <p class="text-xs text-slate-450 dark:text-slate-500">Supports PNG, JPEG, WEBP up to 20MB. Encrypted locally.</p>
+            </div>
+            
+            <div id="upload-preview" class="hidden w-full h-full flex flex-col items-center justify-center p-2 relative">
+              <img id="source-img" class="max-h-48 max-w-full rounded-lg object-contain border border-slate-200 dark:border-slate-800" src="" alt="Source preview">
+              <div class="mt-4 text-xs font-semibold text-slate-600 dark:text-slate-400" id="file-meta"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls & Comparison Details -->
+        <div id="compress-details-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+          <h3 class="font-bold text-base flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <i data-lucide="sliders" class="text-emerald-600 w-4 h-4"></i>
+            <span>Compression Controls</span>
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Quality control slider -->
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-450 mb-2">Compression Quality (<span id="quality-display">80</span>%)</label>
+              <input type="range" id="compress-quality" min="5" max="100" value="80" class="w-full accent-emerald-600" oninput="updateQuality(this.value)">
+              <span class="text-[10px] text-slate-450 dark:text-slate-500 mt-1 block">Lower quality values result in higher compression ratios.</span>
+            </div>
+
+            <!-- Stats Block -->
+            <div class="bg-slate-55/60 dark:bg-slate-950/60 p-4 rounded-xl space-y-2.5 text-xs text-slate-600 dark:text-slate-400 border border-slate-100 dark:border-slate-900">
+              <div class="flex justify-between">
+                <span>Original File Size:</span>
+                <span class="font-bold text-slate-800 dark:text-slate-250" id="stat-orig-size">0 KB</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Compressed File Size:</span>
+                <span class="font-bold text-slate-850 dark:text-slate-150" id="stat-comp-size">Calculating...</span>
+              </div>
+              <div class="flex justify-between border-t border-slate-100 dark:border-slate-900 pt-2 font-bold text-emerald-600 dark:text-emerald-400">
+                <span>Savings:</span>
+                <span id="stat-savings">-0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
+            <button onclick="resetCompressor()" class="px-4 py-2 border border-slate-200 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-900 text-xs font-semibold rounded-xl transition-colors">Choose Another</button>
+            <button id="download-btn" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-emerald-500/10">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Download Compressed Image</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Sidebar -->
+      <div class="space-y-6">
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h2 class="font-bold text-base mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Why compress images locally?</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-450 leading-relaxed">
+            Standard web compressors upload files to backend cloud servers to compress them. Narmada Tools runs 100% locally on your browser. Your images never leave your computer, ensuring absolute privacy and data security.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let activeFile = null;
+    let compressedBlob = null;
+
+    function triggerFileSelect() {
+      // Prevents re-clicking trigger when preview is shown
+      if (!activeFile) {
+        document.getElementById("image-input").click();
+      }
+    }
+
+    function resetCompressor() {
+      activeFile = null;
+      compressedBlob = null;
+      document.getElementById("image-input").value = "";
+      document.getElementById("upload-preview").classList.add("hidden");
+      document.getElementById("upload-prompt").classList.remove("hidden");
+      document.getElementById("compress-details-card").classList.add("hidden");
+    }
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      processImageFile(file);
+    }
+
+    // Drag & Drop setup
+    const dropZone = document.getElementById("drop-zone");
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("bg-emerald-50/40", "dark:bg-emerald-950/20");
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("bg-emerald-50/40", "dark:bg-emerald-950/20");
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("bg-emerald-50/40", "dark:bg-emerald-950/20");
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith("image/")) {
+        processImageFile(file);
+      }
+    });
+
+    function processImageFile(file) {
+      activeFile = file;
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = document.getElementById("source-img");
+        img.src = event.target.result;
+        
+        img.onload = function() {
+          document.getElementById("file-meta").innerText = `${file.name} (${window.formatSize(file.size)}) - Resolution: ${img.naturalWidth} x ${img.naturalHeight}px`;
+          document.getElementById("stat-orig-size").innerText = window.formatSize(file.size);
+          
+          document.getElementById("upload-prompt").classList.add("hidden");
+          document.getElementById("upload-preview").classList.remove("hidden");
+          document.getElementById("compress-details-card").classList.remove("hidden");
+          
+          compressImage();
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateQuality(val) {
+      document.getElementById("quality-display").innerText = val;
+      compressImage();
+    }
+
+    function compressImage() {
+      if (!activeFile) return;
+
+      const quality = parseInt(document.getElementById("compress-quality").value) / 100;
+      const img = document.getElementById("source-img");
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img, 0, 0);
+
+      // Extract as matching mime type or fallback to jpeg
+      let mimeType = activeFile.type;
+      if (mimeType === "image/png" && quality < 1) {
+        // PNG is lossless, so to compress it via canvas quality we transcode to JPEG/WEBP
+        mimeType = "image/jpeg";
+      }
+
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        compressedBlob = blob;
+        
+        const compressedSize = blob.size;
+        document.getElementById("stat-comp-size").innerText = window.formatSize(compressedSize);
+        
+        // Calculate savings
+        const savings = ((activeFile.size - compressedSize) / activeFile.size * 100).toFixed(0);
+        if (savings > 0) {
+          document.getElementById("stat-savings").innerText = `Saved ${savings}%`;
+        } else {
+          document.getElementById("stat-savings").innerText = `0% change`;
+        }
+
+        // Setup download button
+        const downloadBtn = document.getElementById("download-btn");
+        downloadBtn.onclick = () => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `compressed-${activeFile.name.replace(/\.[^/.]+$/, "")}.${mimeType === "image/jpeg" ? "jpg" : "webp"}`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          
+          if (window.confetti) {
+            window.confetti({ particleCount: 50, spread: 60, colors: ["#10b981", "#059669"] });
+          }
+          window.trackToolEvent("image-compressor", "download");
+        };
+
+      }, mimeType, quality);
+    }
+  </script>
+</body>
+</html>

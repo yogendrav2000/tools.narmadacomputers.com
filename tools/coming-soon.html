@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tool Coming Soon - Narmada Tools</title>
+  <meta name="description" content="This tool is currently under development. You can vote for this tool to speed up its release.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <nav class="hidden lg:flex items-center space-x-6">
+          <a href="../index.html#categories" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Categories</a>
+          <a href="../blog/index.html" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Blog</a>
+          
+        </nav>
+        
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Open Menu">
+          <i data-lucide="menu" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="flex-grow flex items-center justify-center py-16 px-4">
+    <div class="max-w-md w-full text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl">
+      <div class="w-16 h-16 bg-blue-50 dark:bg-blue-950/45 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
+        <i data-lucide="sparkles" class="w-8 h-8"></i>
+      </div>
+      <h1 class="text-2xl font-extrabold mb-3">Tool Under Construction</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 leading-relaxed">
+        We are building this utility using high-performance offline browser compilers. Want us to release it sooner? Vote for this tool!
+      </p>
+
+      <!-- Upvote Form -->
+      <form id="vote-form" class="space-y-4" onsubmit="handleVote(event)">
+        <input type="email" required placeholder="Enter your email to get notified on launch" class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+        <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-colors shadow-lg">
+          Upvote & Notify Me
+        </button>
+      </form>
+
+      <div id="vote-success" class="hidden text-sm font-semibold text-emerald-600 mt-4 flex items-center justify-center gap-1.5">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <span>Vote registered! Thank you for your feedback.</span>
+      </div>
+
+      <div class="border-t border-slate-200 dark:border-slate-800 pt-6 mt-8">
+        <span class="text-xs text-slate-400 block mb-3">Or check out these active tools:</span>
+        <div class="flex flex-wrap justify-center gap-2">
+          <a href="word-counter.html" class="text-xs font-medium px-2.5 py-1 rounded bg-slate-150 dark:bg-slate-800 text-blue-600 dark:text-blue-400">Word Counter</a>
+          <a href="image-compressor.html" class="text-xs font-medium px-2.5 py-1 rounded bg-slate-150 dark:bg-slate-800 text-blue-600 dark:text-blue-400">Image Compressor</a>
+          <a href="merge-pdf.html" class="text-xs font-medium px-2.5 py-1 rounded bg-slate-150 dark:bg-slate-800 text-blue-600 dark:text-blue-400">Merge PDF</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto bg-slate-900 text-slate-500 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Platform.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function handleVote(e) {
+      e.preventDefault();
+      const email = e.target.querySelector('input').value;
+      
+      // Store in localStorage
+      let votes = JSON.parse(localStorage.getItem("narmada_tools_votes") || "[]");
+      votes.push({
+        toolId: window.location.hash || "unknown_tool",
+        email: email,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem("narmada_tools_votes", JSON.stringify(votes));
+
+      // Trigger confetti
+      if (window.confetti) {
+        window.confetti({ particleCount: 50, spread: 60, colors: ["#3b82f6", "#10b981"] });
+      }
+
+      e.target.classList.add("hidden");
+      document.getElementById("vote-success").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

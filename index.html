@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Narmada Tools - 120+ Free Online Utility Tools (Text, Image, PDF, Developer, SEO)</title>
+  <meta name="description" content="Access 120+ free, fast, and secure browser-based tools for text editing, image resizing, PDF merging, SEO analysis, formatting, and calculators. Zero sign-up required.">
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Anti-flicker theme loader
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+  
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center space-x-2">
+        <img src="logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <!-- Desktop Search Bar -->
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <!-- Search Results Dropdown -->
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <!-- Right menu controls -->
+      <div class="flex items-center space-x-4">
+        <nav class="hidden lg:flex items-center space-x-6">
+          <a href="index.html#categories" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 dark:hover:text-blue-450 transition-colors">Categories</a>
+          <a href="blog/index.html" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 dark:hover:text-blue-450 transition-colors">Blog</a>
+          
+        </nav>
+        
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Open Menu">
+          <i data-lucide="menu" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 transition-colors">
+      <div class="space-y-3">
+        <!-- Search bar in mobile menu -->
+        <div class="relative w-full mb-4">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+          <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-xl z-50"></div>
+        </div>
+        <a href="index.html#categories" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Categories</a>
+        <a href="blog/index.html" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Blog Articles</a>
+        
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-blue-50/50 via-transparent to-transparent dark:from-blue-950/10 dark:via-transparent dark:to-transparent">
+    <!-- Decorative Gradients -->
+    <div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-400/10 dark:bg-blue-500/5 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-indigo-400/10 dark:bg-indigo-500/5 blur-[100px] pointer-events-none"></div>
+
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="inline-flex items-center space-x-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 px-3.5 py-1.5 rounded-full text-xs font-semibold text-blue-600 dark:text-blue-400 mb-6 animate-fade-in">
+        <span class="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+        <span>100% Free & Browser-Based Utility Hub</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1] animate-slide-up">
+        120+ Power-Packed <br>
+        <span class="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Free Online Tools</span>
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in">
+        Supercharge your workflows with clean, lightning-fast static utilities. Files and operations are processed securely inside your browser—never uploaded to a remote server.
+      </p>
+
+      <!-- Giant Centered Search Bar -->
+      <div class="max-w-2xl mx-auto relative mb-8 shadow-xl shadow-slate-200/50 dark:shadow-none animate-slide-up">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-4 top-4 w-5 h-5 text-slate-400"></i>
+          <input type="text" placeholder="What tool do you need today? e.g. Merge PDF, Case Converter, QR Generator..." class="global-search-input w-full pl-12 pr-4 py-4 text-base bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all dark:text-slate-100">
+        </div>
+        <!-- Search Results Dropdown -->
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 text-left"></div>
+      </div>
+
+      <!-- Quick Links / Tag Recommendations -->
+      <div class="flex flex-wrap items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400 animate-fade-in">
+        <span>Popular Tools:</span>
+        <a href="tools/word-counter.html" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-blue-450 border border-slate-200/60 dark:border-slate-800/60 transition-colors">Word Counter</a>
+        <a href="tools/image-compressor.html" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-blue-450 border border-slate-200/60 dark:border-slate-800/60 transition-colors">Image Compressor</a>
+        <a href="tools/merge-pdf.html" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-blue-450 border border-slate-200/60 dark:border-slate-800/60 transition-colors">Merge PDF</a>
+        <a href="tools/json-formatter.html" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-blue-450 border border-slate-200/60 dark:border-slate-800/60 transition-colors">JSON Formatter</a>
+        <a href="tools/password-generator.html" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-blue-450 border border-slate-200/60 dark:border-slate-800/60 transition-colors">Password Generator</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categories" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-900 transition-colors">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold tracking-tight">Explore Categories</h2>
+      <p class="text-slate-500 dark:text-slate-400 mt-2">Find the specific utilities curated by categories</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Text Tools -->
+      <a href="categories/text.html" class="group block p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-2xl hover:border-blue-500/50 dark:hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="align-left" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Text Tools</h3>
+            <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded-md">20 Tools (5 Active)</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-450 mt-4 leading-relaxed">
+          Case converters, word counters, text repeaters, compare algorithms and character count analytics.
+        </p>
+      </a>
+
+      <!-- Image Tools -->
+      <a href="categories/image.html" class="group block p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-2xl hover:border-emerald-500/50 dark:hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="image" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Image Tools</h3>
+            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">20 Tools (4 Active)</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-450 mt-4 leading-relaxed">
+          Compress sizes, customize dimensions, generate high fidelity QR codes, and construct commercial barcodes.
+        </p>
+      </a>
+
+      <!-- PDF Tools -->
+      <a href="categories/pdf.html" class="group block p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-2xl hover:border-rose-500/50 dark:hover:border-rose-500/40 hover:shadow-xl hover:shadow-rose-500/5 hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="file-text" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PDF Tools</h3>
+            <span class="text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded-md">20 Tools (3 Active)</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-450 mt-4 leading-relaxed">
+          Merge files together, split pages, and encrypt password protections directly inside the browser sandbox.
+        </p>
+      </a>
+
+      <!-- SEO Tools -->
+      <a href="categories/seo.html" class="group block p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-2xl hover:border-amber-500/50 dark:hover:border-amber-500/40 hover:shadow-xl hover:shadow-amber-500/5 hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="globe" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">SEO Tools</h3>
+            <span class="text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md">20 Tools (4 Active)</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-450 mt-4 leading-relaxed">
+          Formulate meta tags, build robots.txt guidelines, draft XML sitemaps, and parse text keyword densities.
+        </p>
+      </a>
+
+      <!-- Developer Tools -->
+      <a href="categories/developer.html" class="group block p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-2xl hover:border-violet-500/50 dark:hover:border-violet-500/40 hover:shadow-xl hover:shadow-violet-500/5 hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-violet-100 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="code" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Developer Tools</h3>
+            <span class="text-xs font-semibold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/40 px-2 py-0.5 rounded-md">20 Tools (6 Active)</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-450 mt-4 leading-relaxed">
+          Prettify JSON trees, compress scripts, encode/decode Base64 and URLs, generate UUIDs, and parse cryptohashes.
+        </p>
+      </a>
+
+      <!-- Utility Tools -->
+      <a href="categories/utility.html" class="group block p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-2xl hover:border-cyan-500/50 dark:hover:border-cyan-500/40 hover:shadow-xl hover:shadow-cyan-500/5 hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="calculator" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Utility Calculators</h3>
+            <span class="text-xs font-semibold text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 px-2 py-0.5 rounded-md">20 Tools (5 Active)</span>
+          </div>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-450 mt-4 leading-relaxed">
+          Compute date spans, compound interest loan EMIs, regional GST tariffs, safe password structures, and BMI scales.
+        </p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Popular Tools Grid Section -->
+  <section class="py-16 bg-slate-100/50 dark:bg-slate-900/30 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-10">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Featured Utilities</h2>
+          <p class="text-slate-500 dark:text-slate-400 mt-1">Our most popular tools, updated in real-time based on browser usage</p>
+        </div>
+        <div class="hidden sm:flex items-center space-x-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400">
+          <span>All 120 Tools Active</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Tool Card: Word Counter -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 p-6 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/45 px-2.5 py-1 rounded-full uppercase tracking-wider">Text</span>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-3">Word Counter</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">Calculate word count, characters, estimated reading time, and density statistics on the fly.</p>
+          </div>
+          <a href="tools/word-counter.html" class="flex items-center justify-between mt-6 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+            <span>Use Tool</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Tool Card: Image Compressor -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 p-6 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45 px-2.5 py-1 rounded-full uppercase tracking-wider">Image</span>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-3">Image Compressor</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">Reduce file sizes of JPG, PNG, and WebP assets while maintaining optimal resolution.</p>
+          </div>
+          <a href="tools/image-compressor.html" class="flex items-center justify-between mt-6 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+            <span>Use Tool</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Tool Card: Merge PDF -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 p-6 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <span class="text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/45 px-2.5 py-1 rounded-full uppercase tracking-wider">PDF</span>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-3">Merge PDF</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">Combine multiple PDF documents together into a single master document in seconds.</p>
+          </div>
+          <a href="tools/merge-pdf.html" class="flex items-center justify-between mt-6 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+            <span>Use Tool</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Tool Card: JSON Formatter -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 p-6 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <div>
+            <span class="text-xs font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/45 px-2.5 py-1 rounded-full uppercase tracking-wider">Developer</span>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-3">JSON Formatter</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">Parse, format, indent, validate syntax, and export neat, printable JSON code blocks.</p>
+          </div>
+          <a href="tools/json-formatter.html" class="flex items-center justify-between mt-6 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+            <span>Use Tool</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Previews -->
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-250 dark:border-slate-900">
+    <div class="flex items-center justify-between mb-12">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Productivity Blog</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-1">SEO strategies, tool reviews, and browser-based development guides</p>
+      </div>
+      <a href="blog/index.html" class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">View All Articles</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Article 1 -->
+      <a href="blog/seo-tips-rank-utility-tools.html" class="group flex flex-col sm:flex-row bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="sm:w-2/5 bg-gradient-to-tr from-blue-600/20 to-indigo-600/20 flex items-center justify-center p-8 group-hover:from-blue-600/30 group-hover:to-indigo-600/30 transition-colors">
+          <i data-lucide="trending-up" class="w-12 h-12 text-blue-600 dark:text-blue-400"></i>
+        </div>
+        <div class="p-6 sm:w-3/5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Search SEO</span>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">How to Rank Free Utility Tools in Search Engine Results</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-3">Discover the essential keywords, schema markup formats, and caching speeds required to index free online tools on Google.</p>
+          </div>
+          <span class="text-xs text-slate-400 mt-4">June 15, 2026 • 5 min read</span>
+        </div>
+      </a>
+
+      <!-- Article 2 -->
+      <a href="blog/client-side-privacy-benefits.html" class="group flex flex-col sm:flex-row bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="sm:w-2/5 bg-gradient-to-tr from-emerald-600/20 to-teal-600/20 flex items-center justify-center p-8 group-hover:from-emerald-600/30 group-hover:to-teal-600/30 transition-colors">
+          <i data-lucide="shield-check" class="w-12 h-12 text-emerald-600 dark:text-emerald-400"></i>
+        </div>
+        <div class="p-6 sm:w-3/5 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Privacy First</span>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100 mt-2 leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Why Client-Side Execution is the Future of File Utilities</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-3">Understand the computational advantages and absolute data security benefits of local in-browser file compression and PDF compilation.</p>
+          </div>
+          <span class="text-xs text-slate-400 mt-4">June 14, 2026 • 4 min read</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Accordion FAQ Section -->
+  <section class="py-16 bg-slate-150/40 dark:bg-slate-900/20 border-t border-slate-200 dark:border-slate-900 transition-colors">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold tracking-tight text-center mb-10">Frequently Asked Questions</h2>
+      
+      <div class="space-y-4">
+        
+        <!-- FAQ 1 -->
+        <div class="faq-item bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+          <button class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-800 dark:text-slate-200 focus:outline-none" onclick="toggleFaq(this)">
+            <span>Are my files uploaded to your servers?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transform transition-transform duration-200"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-200 ease-in-out bg-slate-50/50 dark:bg-slate-950/20">
+            <p class="p-5 text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800">
+              No. Absolutely none of your files or inputs are sent to our servers. All compression, PDF rendering, code formatting, and mathematical calculations are executed locally on your device via client-side JavaScript. Your data privacy is 100% secure.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+          <button class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-800 dark:text-slate-200 focus:outline-none" onclick="toggleFaq(this)">
+            <span>Is there a daily limit on tool usage?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transform transition-transform duration-200"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-200 ease-in-out bg-slate-50/50 dark:bg-slate-950/20">
+            <p class="p-5 text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800">
+              No. Since all operations run on your local processor, Narmada Tools does not incur cloud hosting computing costs. Therefore, you can use all 120+ tools as many times as you want without any restrictions, logins, or paywalls.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+          <button class="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-800 dark:text-slate-200 focus:outline-none" onclick="toggleFaq(this)">
+            <span>Can I use Narmada Tools offline?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transform transition-transform duration-200"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-200 ease-in-out bg-slate-50/50 dark:bg-slate-950/20">
+            <p class="p-5 text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800">
+              Yes. Once the page is loaded in your browser, the script functionalities operate offline. You can save or bookmark the tools, disconnect from the internet, and continue formatting, counting words, generating passwords, or generating QR codes.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup Form -->
+  <section class="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+    <div class="bg-gradient-to-tr from-blue-600 to-indigo-700 dark:from-blue-900/60 dark:to-indigo-900/60 rounded-3xl p-8 sm:p-12 text-center text-white shadow-xl relative overflow-hidden">
+      <!-- Decorative circles -->
+      <div class="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+
+      <h2 class="text-3xl font-extrabold mb-3">Never Miss a Productivity Update</h2>
+      <p class="text-blue-100/90 text-sm max-w-xl mx-auto mb-8">Subscribe to receive notifications when we release new interactive utilities. No spam. Unsubscribe anytime.</p>
+      
+      <form id="newsletter-form" class="max-w-md mx-auto flex flex-col sm:flex-row gap-2 relative z-10" onsubmit="handleSubscribe(event)">
+        <input type="email" required placeholder="Enter your email address" class="w-full px-5 py-3.5 text-slate-900 rounded-xl focus:outline-none text-sm placeholder:text-slate-400">
+        <button type="submit" class="px-6 py-3.5 bg-slate-900 hover:bg-slate-850 dark:bg-blue-600 dark:hover:bg-blue-750 text-white font-semibold rounded-xl text-sm transition-colors whitespace-nowrap shadow-lg">Subscribe Free</button>
+      </form>
+      <div id="subscription-success" class="hidden text-sm font-semibold text-emerald-300 mt-4 animate-fade-in flex items-center justify-center gap-1.5">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <span>Thank you for subscribing! Your settings are synced offline.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-auto bg-slate-900 dark:bg-slate-950 text-slate-400 border-t border-slate-800 py-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8">
+      
+      <!-- Brand & Mission -->
+      <div class="col-span-2 space-y-4">
+        <a href="index.html" class="flex items-center space-x-2 text-white">
+          <img src="logo.jpg" alt="Narmada Tools Logo" class="w-8 h-8 rounded-lg object-cover shadow-md">
+          <span class="text-lg font-bold">Narmada Tools</span>
+        </a>
+        <p class="text-sm text-slate-450 leading-relaxed max-w-sm">
+          Providing high-fidelity, client-side online tools to streamline code editing, image compression, metadata generation, and daily utility math securely.
+        </p>
+        <div class="flex items-center space-x-3 text-slate-500">
+          <i data-lucide="shield" class="w-4 h-4"></i>
+          <span class="text-xs">Offline Secure Calculations Enabled</span>
+        </div>
+      </div>
+
+      <!-- Categories Columns -->
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="categories/text.html" class="hover:text-white transition-colors">Text Tools</a></li>
+          <li><a href="categories/image.html" class="hover:text-white transition-colors">Image Compressors</a></li>
+          <li><a href="categories/pdf.html" class="hover:text-white transition-colors">PDF Integrations</a></li>
+          <li><a href="categories/seo.html" class="hover:text-white transition-colors">SEO Formulators</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Developers</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="categories/developer.html" class="hover:text-white transition-colors">Developer Formatters</a></li>
+          <li><a href="categories/utility.html" class="hover:text-white transition-colors">Utility Calculators</a></li>
+          <li><a href="blog/index.html" class="hover:text-white transition-colors">Blog Articles</a></li>
+          
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">AdSense Ready</h4>
+        <div class="border border-dashed border-slate-700/60 p-4 rounded-xl flex flex-col justify-center items-center h-28 bg-slate-900/50">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-slate-600 mb-1"></i>
+          <span class="text-[10px] text-slate-650 uppercase tracking-widest text-center">Sponsored Ads Space</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <p>&copy; 2026 Narmada Tools. All rights reserved. Self-contained cPanel static distribution.</p>
+      <div class="flex space-x-4">
+        <a href="index.html#categories" class="hover:underline">Categories Map</a>
+        <span>•</span>
+        <a href="blog/index.html" class="hover:underline">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Imports -->
+  <script src="js/utils.js"></script>
+  <script src="js/main.js"></script>
+  
+  <script>
+    // FAQ Accordion Trigger
+    function toggleFaq(btn) {
+      const answer = btn.nextElementSibling;
+      const icon = btn.querySelector('i');
+      
+      // Close other answers first
+      document.querySelectorAll('.faq-answer').forEach(el => {
+        if (el !== answer && el.style.maxHeight) {
+          el.style.maxHeight = null;
+          el.previousElementSibling.querySelector('i').classList.remove('rotate-180');
+        }
+      });
+
+      if (answer.style.maxHeight) {
+        answer.style.maxHeight = null;
+        icon.classList.remove('rotate-180');
+      } else {
+        answer.style.maxHeight = answer.scrollHeight + "px";
+        icon.classList.add('rotate-180');
+      }
+    }
+
+    // Local Newsletter Signup Handler
+    function handleSubscribe(e) {
+      e.preventDefault();
+      const form = e.target;
+      const emailInput = form.querySelector('input');
+      const email = emailInput.value.trim();
+      if (!email) return;
+
+      // Log in localStorage
+      let subscribers = JSON.parse(localStorage.getItem("narmada_tools_subscribers") || "[]");
+      subscribers.push({
+        email: email,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem("narmada_tools_subscribers", JSON.stringify(subscribers));
+
+      // Trigger confetti
+      if (window.confetti) {
+        window.confetti({
+          particleCount: 80,
+          spread: 80,
+          colors: ["#3b82f6", "#10b981", "#6366f1"],
+          origin: { y: 0.8 }
+        });
+      }
+
+      // Hide form, show success message
+      form.classList.add("hidden");
+      document.getElementById("subscription-success").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

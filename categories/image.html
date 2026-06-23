@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Optimizers and Creators - Narmada Tools</title>
+  <meta name="description" content="Compress, resize, convert, watermaker, crop, and generate codes. Fast client-side image editing.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <nav class="hidden lg:flex items-center space-x-6">
+          <a href="../index.html#categories" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Categories</a>
+          <a href="../blog/index.html" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Blog</a>
+          
+        </nav>
+        
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Open Menu">
+          <i data-lucide="menu" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 transition-colors">
+      <div class="space-y-3">
+        <div class="relative w-full mb-4">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+          <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-xl z-50"></div>
+        </div>
+        <a href="../index.html#categories" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Categories</a>
+        <a href="../blog/index.html" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Blog Articles</a>
+        
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../index.html#categories" class="hover:text-blue-650 transition-colors">Categories</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-250 font-medium">Image Tools</span>
+    </nav>
+
+    <!-- Category Header -->
+    <div class="bg-gradient-to-r from-emerald-600 to-indigo-600 rounded-3xl p-8 sm:p-12 text-white mb-10 shadow-xl relative overflow-hidden">
+      <div class="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+            <i data-lucide="image" class="w-6 h-6 text-white"></i>
+          </div>
+          <h1 class="text-3xl font-extrabold tracking-tight">Image Tools</h1>
+          <p class="text-blue-100/90 text-sm mt-2 max-w-xl">
+            Compress, resize, convert, watermaker, crop, and generate codes. Fast client-side image editing.
+          </p>
+        </div>
+        <div class="bg-white/10 border border-white/20 px-5 py-4 rounded-2xl backdrop-blur-md">
+          <span class="text-xs uppercase tracking-wider text-blue-200 font-bold block">Status Index</span>
+          <span class="text-2xl font-black text-white">20 / 20</span>
+          <span class="text-xs text-blue-200 block mt-1">Interactive Tools Active</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid of Tools -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <!-- Interactive Tool Card: Image Compressor -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="minimize-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Image Compressor</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Compress JPEG, PNG, and WebP images locally without losing quality.</p>
+        </div>
+        <a href="../tools/image-compressor.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Image Resizer -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="maximize-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Image Resizer</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Resize images to custom dimensions in pixels or percentages.</p>
+        </div>
+        <a href="../tools/image-resizer.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: QR Code Generator -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="qr-code" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">QR Code Generator</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Generate custom QR codes with custom colors and sizes.</p>
+        </div>
+        <a href="../tools/qr-generator.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Barcode Generator -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="barcode" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Barcode Generator</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Generate custom standard barcodes (CODE128, EAN, UPC).</p>
+        </div>
+        <a href="../tools/barcode-generator.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Image Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Image Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert images between JPG, PNG, WebP, BMP and GIF formats.</p>
+        </div>
+        <a href="../tools/image-converter.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Crop Image Tool -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="crop" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Crop Image Tool</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Crop your images to exact ratios and dimensions easily.</p>
+        </div>
+        <a href="../tools/crop-image.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Rotate Image Tool -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="rotate-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Rotate Image Tool</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Rotate images clockwise or counter-clockwise instantly.</p>
+        </div>
+        <a href="../tools/rotate-image.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Image to Base64 -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-image" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Image to Base64</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert image files to Base64 data URLs for HTML/CSS embedding.</p>
+        </div>
+        <a href="../tools/image-to-base64.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Base64 to Image -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="image" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Base64 to Image</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert Base64 data strings back into viewable and downloadable images.</p>
+        </div>
+        <a href="../tools/base64-to-image.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: WebP to JPG Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">WebP to JPG Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert WebP images to JPG files in your browser.</p>
+        </div>
+        <a href="../tools/webp-to-jpg.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: JPG to WebP Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">JPG to WebP Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert standard JPG images to modern WebP format.</p>
+        </div>
+        <a href="../tools/jpg-to-webp.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: PNG to JPG Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PNG to JPG Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert PNG images to JPG format with custom background color.</p>
+        </div>
+        <a href="../tools/png-to-jpg.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: JPG to PNG Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">JPG to PNG Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert JPEG files to PNG format maintaining original colors.</p>
+        </div>
+        <a href="../tools/jpg-to-png.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Color Picker from Image -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="pipette" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Color Picker from Image</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Extract hex and RGB colors from any uploaded image.</p>
+        </div>
+        <a href="../tools/color-picker-from-image.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Image Watermark Tool -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="stamp" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Image Watermark Tool</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Add watermarks, logos, or text overlays to your images.</p>
+        </div>
+        <a href="../tools/image-watermarker.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Meme Generator -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="laugh" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Meme Generator</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Create funny memes with custom text overlays on top and bottom.</p>
+        </div>
+        <a href="../tools/meme-generator.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: ICO Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">ICO Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert regular images to .ico files for website favicons.</p>
+        </div>
+        <a href="../tools/ico-converter.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: GIF Maker -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="film" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">GIF Maker</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Create animated GIFs from a series of static images.</p>
+        </div>
+        <a href="../tools/gif-maker.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: SVG to PNG Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">SVG to PNG Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert vector SVG files into raster PNG files.</p>
+        </div>
+        <a href="../tools/svg-to-png.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: PNG to SVG Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PNG to SVG Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert raster PNG images to scalable vector graphics (SVG).</p>
+        </div>
+        <a href="../tools/png-to-svg.html" class="inline-flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto bg-slate-900 dark:bg-slate-950 text-slate-400 border-t border-slate-800 py-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8">
+      <div class="col-span-2 space-y-4">
+        <a href="../index.html" class="flex items-center space-x-2 text-white">
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="text-lg font-bold">Narmada Tools</span>
+        </a>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-sm">
+          Providing high-fidelity, client-side online tools to streamline code editing, image compression, metadata generation, and daily utility math securely.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 font-sans">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="text.html" class="hover:text-white transition-colors">Text Tools</a></li>
+          <li><a href="image.html" class="hover:text-white transition-colors">Image Compressors</a></li>
+          <li><a href="pdf.html" class="hover:text-white transition-colors">PDF Integrations</a></li>
+          <li><a href="seo.html" class="hover:text-white transition-colors">SEO Formulators</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Developers</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="developer.html" class="hover:text-white transition-colors">Developer Formatters</a></li>
+          <li><a href="utility.html" class="hover:text-white transition-colors">Utility Calculators</a></li>
+          <li><a href="../blog/index.html" class="hover:text-white transition-colors">Blog Articles</a></li>
+          
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">AdSense Ready</h4>
+        <div class="border border-dashed border-slate-700/60 p-4 rounded-xl flex flex-col justify-center items-center h-28 bg-slate-900/50">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-slate-650 mb-1"></i>
+          <span class="text-[10px] text-slate-500 uppercase tracking-widest text-center">Sponsored Ads Space</span>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <p>&copy; 2026 Narmada Tools. All rights reserved. Self-contained cPanel static distribution.</p>
+    </div>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Management Suite - Narmada Tools</title>
+  <meta name="description" content="Merge, split, protect, extract, and convert PDF documents. All processing runs offline in memory.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <nav class="hidden lg:flex items-center space-x-6">
+          <a href="../index.html#categories" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Categories</a>
+          <a href="../blog/index.html" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Blog</a>
+          
+        </nav>
+        
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Open Menu">
+          <i data-lucide="menu" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 transition-colors">
+      <div class="space-y-3">
+        <div class="relative w-full mb-4">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+          <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-xl z-50"></div>
+        </div>
+        <a href="../index.html#categories" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Categories</a>
+        <a href="../blog/index.html" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Blog Articles</a>
+        
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../index.html#categories" class="hover:text-blue-650 transition-colors">Categories</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-250 font-medium">PDF Tools</span>
+    </nav>
+
+    <!-- Category Header -->
+    <div class="bg-gradient-to-r from-red-600 to-indigo-600 rounded-3xl p-8 sm:p-12 text-white mb-10 shadow-xl relative overflow-hidden">
+      <div class="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+            <i data-lucide="file-text" class="w-6 h-6 text-white"></i>
+          </div>
+          <h1 class="text-3xl font-extrabold tracking-tight">PDF Tools</h1>
+          <p class="text-blue-100/90 text-sm mt-2 max-w-xl">
+            Merge, split, protect, extract, and convert PDF documents. All processing runs offline in memory.
+          </p>
+        </div>
+        <div class="bg-white/10 border border-white/20 px-5 py-4 rounded-2xl backdrop-blur-md">
+          <span class="text-xs uppercase tracking-wider text-blue-200 font-bold block">Status Index</span>
+          <span class="text-2xl font-black text-white">20 / 20</span>
+          <span class="text-xs text-blue-200 block mt-1">Interactive Tools Active</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid of Tools -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <!-- Interactive Tool Card: Merge PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="combine" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Merge PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Merge multiple PDF documents into a single PDF file.</p>
+        </div>
+        <a href="../tools/merge-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Split PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="scissors" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Split PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Extract specific page ranges or split a PDF into separate files.</p>
+        </div>
+        <a href="../tools/split-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Protect PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="lock" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Protect PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Add password protection and secure encryption to your PDF.</p>
+        </div>
+        <a href="../tools/protect-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Unlock PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="unlock" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Unlock PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Remove passwords, permissions, and security from PDF documents.</p>
+        </div>
+        <a href="../tools/unlock-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: PDF to Word Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-output" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PDF to Word Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert PDF documents into editable Microsoft Word documents.</p>
+        </div>
+        <a href="../tools/pdf-to-word.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Word to PDF Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-input" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Word to PDF Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert doc/docx files into standard PDF documents.</p>
+        </div>
+        <a href="../tools/word-to-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: PDF to JPG Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-image" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PDF to JPG Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert PDF pages into high-quality JPEG images.</p>
+        </div>
+        <a href="../tools/pdf-to-jpg.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: JPG to PDF Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-image" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">JPG to PDF Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert JPG and PNG images into a clean PDF document.</p>
+        </div>
+        <a href="../tools/jpg-to-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Compress PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-archive" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Compress PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Reduce file size of PDFs while optimizing visual quality.</p>
+        </div>
+        <a href="../tools/compress-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Rotate PDF Pages -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="rotate-cw" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Rotate PDF Pages</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Rotate specific pages or entire PDF documents.</p>
+        </div>
+        <a href="../tools/rotate-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Delete PDF Pages -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="trash-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Delete PDF Pages</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Remove unwanted pages from a PDF document.</p>
+        </div>
+        <a href="../tools/delete-pdf-pages.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Add PDF Page Numbers -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="binary" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Add PDF Page Numbers</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Insert customizable page numbers into your PDF file.</p>
+        </div>
+        <a href="../tools/add-pdf-page-numbers.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: EPUB to PDF Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="book-open" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">EPUB to PDF Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert EPUB ebooks into readable PDF documents.</p>
+        </div>
+        <a href="../tools/epub-to-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: PDF to EPUB Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="book-open" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PDF to EPUB Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert PDF documents to EPUB format for e-readers.</p>
+        </div>
+        <a href="../tools/pdf-to-epub.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: HTML to PDF Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="globe" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">HTML to PDF Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert web pages or local HTML files into PDF documents.</p>
+        </div>
+        <a href="../tools/html-to-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: PDF to HTML Converter -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="globe" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">PDF to HTML Converter</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Convert PDF layouts into standard HTML structure.</p>
+        </div>
+        <a href="../tools/pdf-to-html.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Extract PDF Images -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="image" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Extract PDF Images</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Extract all embedded images from inside a PDF file.</p>
+        </div>
+        <a href="../tools/extract-pdf-images.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Extract PDF Text -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Extract PDF Text</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Extract all written text from a PDF document.</p>
+        </div>
+        <a href="../tools/extract-pdf-text.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Add Watermark to PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="stamp" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Add Watermark to PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Overlay text or image watermarks onto PDF pages.</p>
+        </div>
+        <a href="../tools/add-watermark-to-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+
+      <!-- Interactive Tool Card: Sign PDF -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 p-6 rounded-2xl hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg flex items-center justify-center">
+              <i data-lucide="pen-tool" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-400">Interactive</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">Sign PDF</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Add digital signatures or hand-drawn signatures to PDF.</p>
+        </div>
+        <a href="../tools/sign-pdf.html" class="inline-flex items-center text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 mt-6">
+          <span>Launch Tool</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto bg-slate-900 dark:bg-slate-950 text-slate-400 border-t border-slate-800 py-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8">
+      <div class="col-span-2 space-y-4">
+        <a href="../index.html" class="flex items-center space-x-2 text-white">
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="text-lg font-bold">Narmada Tools</span>
+        </a>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-sm">
+          Providing high-fidelity, client-side online tools to streamline code editing, image compression, metadata generation, and daily utility math securely.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 font-sans">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="text.html" class="hover:text-white transition-colors">Text Tools</a></li>
+          <li><a href="image.html" class="hover:text-white transition-colors">Image Compressors</a></li>
+          <li><a href="pdf.html" class="hover:text-white transition-colors">PDF Integrations</a></li>
+          <li><a href="seo.html" class="hover:text-white transition-colors">SEO Formulators</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Developers</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="developer.html" class="hover:text-white transition-colors">Developer Formatters</a></li>
+          <li><a href="utility.html" class="hover:text-white transition-colors">Utility Calculators</a></li>
+          <li><a href="../blog/index.html" class="hover:text-white transition-colors">Blog Articles</a></li>
+          
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">AdSense Ready</h4>
+        <div class="border border-dashed border-slate-700/60 p-4 rounded-xl flex flex-col justify-center items-center h-28 bg-slate-900/50">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-slate-650 mb-1"></i>
+          <span class="text-[10px] text-slate-500 uppercase tracking-widest text-center">Sponsored Ads Space</span>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <p>&copy; 2026 Narmada Tools. All rights reserved. Self-contained cPanel static distribution.</p>
+    </div>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Meta Tag Generator - HTML Meta Tags Online - Narmada Tools</title>
+  <meta name="description" content="Generate search engine friendly HTML meta tags for your website. Customize descriptions, keywords, robots crawling directives, and authors.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/seo.html" class="hover:text-blue-650 transition-colors">SEO Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Meta Tag Generator</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Inputs (2 columns) -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="tags" class="text-amber-600 w-5 h-5"></i>
+            <span>Meta Tag Generator</span>
+          </h1>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-405 mb-2">Site Title</label>
+                <input type="text" id="meta-title" value="My Awesome Website" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="generateMetaTags()">
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-405 mb-2">Site Author</label>
+                <input type="text" id="meta-author" value="John Doe" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="generateMetaTags()">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Site Description</label>
+              <textarea id="meta-desc" class="w-full h-20 p-3 border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50 dark:bg-slate-955 dark:text-slate-100 transition-all font-sans text-sm resize-none" oninput="generateMetaTags()">A brief description of my custom landing page.</textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Keywords (comma separated)</label>
+              <input type="text" id="meta-keywords" value="web, code, design, landing page" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" oninput="generateMetaTags()">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Allow Indexing by Crawlers?</label>
+                <select id="meta-robots-index" class="w-full px-3 py-2 border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 text-slate-700 dark:text-slate-300 text-sm" onchange="generateMetaTags()">
+                  <option value="index">Yes (Index)</option>
+                  <option value="noindex">No (Noindex)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Allow Robots to Follow Links?</label>
+                <select id="meta-robots-follow" class="w-full px-3 py-2 border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 text-slate-700 dark:text-slate-300 text-sm" onchange="generateMetaTags()">
+                  <option value="follow">Yes (Follow)</option>
+                  <option value="nofollow">No (Nofollow)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Output HTML -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">HTML Meta Tags Output</label>
+          <textarea id="meta-output" readonly placeholder="Output HTML tags will appear here..." class="w-full h-48 p-4 border border-slate-250 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-950 dark:text-slate-150 transition-all font-mono text-xs resize-none"></textarea>
+          
+          <div class="flex justify-end gap-2 mt-4">
+            <button onclick="copyMeta()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+              <span>Copy Meta Tags</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Sidebar -->
+      <div class="space-y-6">
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function generateMetaTags() {
+      const title = document.getElementById("meta-title").value.trim();
+      const author = document.getElementById("meta-author").value.trim();
+      const desc = document.getElementById("meta-desc").value.trim();
+      const keywords = document.getElementById("meta-keywords").value.trim();
+      const index = document.getElementById("meta-robots-index").value;
+      const follow = document.getElementById("meta-robots-follow").value;
+
+      let html = `<!-- HTML Meta Tags -->\n`;
+      if (title) {
+        html += `<title>${title}</title>\n`;
+      }
+      if (desc) {
+        html += `<meta name="description" content="${desc}">\n`;
+      }
+      if (keywords) {
+        html += `<meta name="keywords" content="${keywords}">\n`;
+      }
+      if (author) {
+        html += `<meta name="author" content="${author}">\n`;
+      }
+      
+      // Robots
+      html += `<meta name="robots" content="${index}, ${follow}">\n`;
+
+      // Open Graph / Facebook
+      html += `\n<!-- Facebook Meta Tags -->\n`;
+      html += `<meta property="og:type" content="website">\n`;
+      if (title) html += `<meta property="og:title" content="${title}">\n`;
+      if (desc) html += `<meta property="og:description" content="${desc}">\n`;
+      
+      // Twitter
+      html += `\n<!-- Twitter Meta Tags -->\n`;
+      html += `<meta name="twitter:card" content="summary_large_image">\n`;
+      if (title) html += `<meta name="twitter:title" content="${title}">\n`;
+      if (desc) html += `<meta name="twitter:description" content="${desc}">\n`;
+
+      document.getElementById("meta-output").value = html;
+    }
+
+    function copyMeta() {
+      const text = document.getElementById("meta-output").value;
+      if (!text) return;
+      window.copyToClipboard(text);
+      window.trackToolEvent("meta-generator", "copy");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      generateMetaTags();
+    });
+  </script>
+</body>
+</html>

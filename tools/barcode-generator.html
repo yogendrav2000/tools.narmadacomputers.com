@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Barcode Generator - Code128, EAN, UPC - Narmada Tools</title>
+  <meta name="description" content="Generate standard commercial barcodes online. Customize format types, line width ratios, colors and heights. Secure browser-based execution.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- JsBarcode CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/image.html" class="hover:text-blue-650 transition-colors">Image Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Barcode Generator</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Inputs -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="barcode" class="text-emerald-600 w-5 h-5"></i>
+            <span>Barcode Generator</span>
+          </h1>
+
+          <div class="space-y-4">
+            <!-- Data value -->
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Barcode Value / Code String</label>
+              <input type="text" id="bc-data" value="1234567890" class="w-full px-4 py-3 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-955 dark:text-slate-100" placeholder="e.g. 12345678" oninput="generateBarcode()">
+              <p id="bc-validation-error" class="hidden text-xs text-red-500 mt-1 font-semibold"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Format select -->
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Barcode Symbology Format</label>
+                <select id="bc-format" class="w-full px-3 py-2 border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-sm" onchange="changeBarcodeFormat(this.value)">
+                  <option value="CODE128">CODE128 (Standard Industrial)</option>
+                  <option value="EAN13">EAN-13 (Standard Retail - 13 digits)</option>
+                  <option value="EAN8">EAN-8 (Short Retail - 8 digits)</option>
+                  <option value="UPC">UPC-A (North American Retail - 12 digits)</option>
+                  <option value="CODE39">CODE39 (Alphanumeric)</option>
+                  <option value="ITF14">ITF-14 (Interleaved 2 of 5 - 14 digits)</option>
+                  <option value="MSI">MSI Plessey</option>
+                  <option value="pharmacode">Pharmacode (Pharmaceutical)</option>
+                </select>
+              </div>
+
+              <!-- Options -->
+              <div class="flex items-center space-x-2 pt-6">
+                <input type="checkbox" id="bc-display-text" checked class="w-4 h-4 rounded text-blue-600 accent-emerald-600" onchange="generateBarcode()">
+                <label for="bc-display-text" class="text-sm font-semibold text-slate-650 dark:text-slate-450 cursor-pointer">Display readable text underneath</label>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Colors picker -->
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Line Color</label>
+                <div class="flex items-center space-x-2">
+                  <input type="color" id="bc-color-line" value="#000000" class="w-10 h-10 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer bg-white" onchange="generateBarcode()">
+                  <input type="text" id="bc-color-line-hex" value="#000000" class="px-3 py-2 text-xs border border-slate-250 dark:border-slate-800 rounded-xl w-28 uppercase text-slate-700 bg-white dark:bg-slate-950 dark:text-slate-300" oninput="updateColorHex('line', this.value)">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Background Color</label>
+                <div class="flex items-center space-x-2">
+                  <input type="color" id="bc-color-bg" value="#ffffff" class="w-10 h-10 border border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer bg-white" onchange="generateBarcode()">
+                  <input type="text" id="bc-color-bg-hex" value="#ffffff" class="px-3 py-2 text-xs border border-slate-250 dark:border-slate-800 rounded-xl w-28 uppercase text-slate-700 bg-white dark:bg-slate-950 dark:text-slate-300" oninput="updateColorHex('bg', this.value)">
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Height slider -->
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Barcode Height (<span id="bc-height-val">100</span>px)</label>
+                <input type="range" id="bc-height" min="40" max="180" value="100" class="w-full accent-emerald-600" oninput="updateBCHeight(this.value)">
+              </div>
+
+              <!-- Bar Width -->
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Bar Thickness Width (<span id="bc-width-val">2</span>)</label>
+                <input type="range" id="bc-width" min="1" max="4" value="2" class="w-full accent-emerald-600" oninput="updateBCWidth(this.value)">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Sidebar -->
+      <div class="space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col items-center">
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-4 self-start">Live Barcode Preview</label>
+          
+          <div class="border border-slate-200 dark:border-slate-800 p-4 rounded-2xl bg-white flex items-center justify-center min-h-64 w-full">
+            <svg id="bc-svg"></svg>
+          </div>
+
+          <button onclick="downloadBarcode()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors mt-6 flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/10">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Download PNG</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function updateColorHex(type, val) {
+      if (val.match(/^#[0-9A-F]{6}$/i)) {
+        document.getElementById(`bc-color-${type}`).value = val;
+        generateBarcode();
+      }
+    }
+
+    function updateBCHeight(val) {
+      document.getElementById("bc-height-val").innerText = val;
+      generateBarcode();
+    }
+
+    function updateBCWidth(val) {
+      document.getElementById("bc-width-val").innerText = val;
+      generateBarcode();
+    }
+
+    function changeBarcodeFormat(val) {
+      // Provide sensible default inputs based on format rules
+      const dataInput = document.getElementById("bc-data");
+      if (val === "EAN13") {
+        dataInput.value = "1234567890128";
+      } else if (val === "EAN8") {
+        dataInput.value = "12345670";
+      } else if (val === "UPC") {
+        dataInput.value = "123456789012";
+      } else if (val === "ITF14") {
+        dataInput.value = "12345678901230";
+      } else if (val === "pharmacode") {
+        dataInput.value = "1234";
+      }
+      generateBarcode();
+    }
+
+    function generateBarcode() {
+      const svg = document.getElementById("bc-svg");
+      const data = document.getElementById("bc-data").value;
+      const format = document.getElementById("bc-format").value;
+      const displayTxt = document.getElementById("bc-display-text").checked;
+      const lineColor = document.getElementById("bc-color-line").value;
+      const bgColor = document.getElementById("bc-color-bg").value;
+      const height = parseInt(document.getElementById("bc-height").value);
+      const width = parseInt(document.getElementById("bc-width").value);
+      
+      const errorMsg = document.getElementById("bc-validation-error");
+
+      // Update hex strings
+      document.getElementById("bc-color-line-hex").value = lineColor;
+      document.getElementById("bc-color-bg-hex").value = bgColor;
+
+      if (!data) {
+        errorMsg.classList.add("hidden");
+        return;
+      }
+
+      try {
+        // JsBarcode globally defined by CDN
+        if (window.JsBarcode) {
+          window.JsBarcode(svg, data, {
+            format: format,
+            lineColor: lineColor,
+            background: bgColor,
+            width: width,
+            height: height,
+            displayValue: displayTxt,
+            valid: function(valid) {
+              if (valid) {
+                errorMsg.classList.add("hidden");
+              } else {
+                errorMsg.innerText = `Invalid characters or length for ${format} format rules.`;
+                errorMsg.classList.remove("hidden");
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function downloadBarcode() {
+      const svg = document.getElementById("bc-svg");
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svg);
+      
+      // Draw SVG onto canvas to trigger PNG download
+      const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+      const DOMURL = window.URL || window.webkitURL || window;
+      const url = DOMURL.createObjectURL(svgBlob);
+      
+      const img = new Image();
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        
+        // Add safety margins
+        canvas.width = img.width + 40;
+        canvas.height = img.height + 40;
+        
+        // Fill white background first
+        ctx.fillStyle = document.getElementById("bc-color-bg").value;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw the barcode image centered
+        ctx.drawImage(img, 20, 20);
+        
+        const pngUrl = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = pngUrl;
+        a.download = `barcode-${document.getElementById("bc-data").value}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        DOMURL.revokeObjectURL(url);
+
+        if (window.confetti) {
+          window.confetti({ particleCount: 50, spread: 60, colors: ["#10b981", "#059669"] });
+        }
+        window.trackToolEvent("barcode-generator", "download");
+      };
+      
+      img.src = url;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      setTimeout(generateBarcode, 200);
+    });
+  </script>
+</body>
+</html>

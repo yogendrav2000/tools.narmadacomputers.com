@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Age Calculator - Calculate Your Exact Age Online - Narmada Tools</title>
+  <meta name="description" content="Calculate your exact age in years, months, weeks, days, hours, and seconds. View next birthday countdown timers. Secure offline browser calculation.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/utility.html" class="hover:text-blue-650 transition-colors">Utility Calculators</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Age Calculator</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Inputs -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="calendar" class="text-cyan-600 w-5 h-5"></i>
+            <span>Age Calculator</span>
+          </h1>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- DOB input -->
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Date of Birth</label>
+              <input type="date" id="age-dob" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" onchange="calculateAge()">
+            </div>
+
+            <!-- Target Date input -->
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-505 dark:text-slate-400 mb-2">Age at the Date of</label>
+              <input type="date" id="age-target" class="w-full px-3 py-2 text-sm border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-950 dark:text-slate-100" onchange="calculateAge()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Results -->
+        <div id="age-results-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+          <h3 class="font-bold text-base flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <i data-lucide="activity" class="text-cyan-600 w-4 h-4"></i>
+            <span>Your Calculated Age</span>
+          </h3>
+
+          <div class="bg-gradient-to-tr from-cyan-600/10 to-blue-650/10 dark:from-cyan-950/20 dark:to-blue-950/20 p-6 rounded-2xl border border-cyan-100/50 dark:border-cyan-950/30 text-center">
+            <span class="text-[10px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-widest block">Exact Age Span</span>
+            <span class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white block mt-2" id="age-summary">24 years, 5 months, 12 days</span>
+          </div>
+
+          <!-- Chronology breakdowns grid -->
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-900">
+              <span class="text-slate-500 dark:text-slate-400 text-xs block">Total Months</span>
+              <span class="text-xl font-extrabold text-cyan-600 mt-1 block" id="breakdown-months">0</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-900">
+              <span class="text-slate-500 dark:text-slate-400 text-xs block">Total Weeks</span>
+              <span class="text-xl font-extrabold text-cyan-600 mt-1 block" id="breakdown-weeks">0</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-900">
+              <span class="text-slate-500 dark:text-slate-400 text-xs block">Total Days</span>
+              <span class="text-xl font-extrabold text-cyan-600 mt-1 block" id="breakdown-days">0</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-900">
+              <span class="text-slate-500 dark:text-slate-400 text-xs block">Total Hours</span>
+              <span class="text-lg font-extrabold text-cyan-600 mt-1 block" id="breakdown-hours">0</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-900">
+              <span class="text-slate-500 dark:text-slate-400 text-xs block">Total Minutes</span>
+              <span class="text-lg font-extrabold text-cyan-600 mt-1 block" id="breakdown-minutes">0</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-900">
+              <span class="text-slate-500 dark:text-slate-400 text-xs block">Total Seconds</span>
+              <span class="text-lg font-extrabold text-cyan-600 mt-1 block" id="breakdown-seconds">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Birthday Countdown Timer Sidebar -->
+      <div class="space-y-6">
+        
+        <!-- Next Birthday -->
+        <div id="next-birthday-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h3 class="font-bold text-base mb-4 border-b border-slate-105 dark:border-slate-800 pb-2 flex items-center gap-1.5">
+            <i data-lucide="cake" class="w-4 h-4 text-pink-500"></i>
+            <span>Next Birthday Countdown</span>
+          </h3>
+
+          <div class="space-y-4">
+            <div class="flex justify-between text-xs text-slate-500">
+              <span>Next Birthday on:</span>
+              <span class="font-bold text-slate-700 dark:text-slate-300" id="next-bday-date">June 15, 2027</span>
+            </div>
+            
+            <div class="flex justify-between text-xs text-slate-500">
+              <span>Day of the week:</span>
+              <span class="font-bold text-slate-700 dark:text-slate-300" id="next-bday-day">Tuesday</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-center pt-2">
+              <div class="bg-pink-50/50 dark:bg-pink-950/20 border border-pink-100 dark:border-pink-900/30 p-3 rounded-lg">
+                <span class="text-lg font-black text-pink-600" id="next-bday-months">0</span>
+                <span class="text-[10px] text-slate-400 block">Months Remaining</span>
+              </div>
+              <div class="bg-pink-50/50 dark:bg-pink-950/20 border border-pink-100 dark:border-pink-900/30 p-3 rounded-lg">
+                <span class="text-lg font-black text-pink-600" id="next-bday-days">0</span>
+                <span class="text-[10px] text-slate-400 block">Days Remaining</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Initialize target date input to today
+    window.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("age-target").value = today;
+    });
+
+    function calculateAge() {
+      const dobStr = document.getElementById("age-dob").value;
+      const targetStr = document.getElementById("age-target").value;
+
+      if (!dobStr || !targetStr) return;
+
+      const dob = new Date(dobStr);
+      const target = new Date(targetStr);
+
+      if (dob > target) {
+        alert("Date of birth cannot be after the target age date.");
+        return;
+      }
+
+      // 1. Detailed Year-Month-Day calculation
+      let years = target.getFullYear() - dob.getFullYear();
+      let months = target.getMonth() - dob.getMonth();
+      let days = target.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months--;
+        // Get number of days in previous month of target date
+        const prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      document.getElementById("age-summary").innerText = `${years} years, ${months} months, ${days} days`;
+
+      // 2. Breakdown stats
+      const diffMs = target.getTime() - dob.getTime();
+      const totalSecs = Math.floor(diffMs / 1000);
+      const totalMins = Math.floor(totalSecs / 60);
+      const totalHours = Math.floor(totalMins / 60);
+      const totalDays = Math.floor(totalHours / 24);
+      const totalWeeks = Math.floor(totalDays / 7);
+      
+      // Calculate months roughly
+      const totalMonths = (years * 12) + months;
+
+      document.getElementById("breakdown-months").innerText = totalMonths.toLocaleString();
+      document.getElementById("breakdown-weeks").innerText = totalWeeks.toLocaleString();
+      document.getElementById("breakdown-days").innerText = totalDays.toLocaleString();
+      document.getElementById("breakdown-hours").innerText = totalHours.toLocaleString();
+      document.getElementById("breakdown-minutes").innerText = totalMins.toLocaleString();
+      document.getElementById("breakdown-seconds").innerText = totalSecs.toLocaleString();
+
+      document.getElementById("age-results-card").classList.remove("hidden");
+
+      // 3. Next Birthday Calculation
+      calculateNextBirthday(dob, target);
+    }
+
+    function calculateNextBirthday(dob, target) {
+      const nextBday = new Date(target.getFullYear(), dob.getMonth(), dob.getDate());
+      if (nextBday < target) {
+        nextBday.setFullYear(target.getFullYear() + 1);
+      }
+
+      const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+      document.getElementById("next-bday-date").innerText = `${months[nextBday.getMonth()]} ${nextBday.getDate()}, ${nextBday.getFullYear()}`;
+      document.getElementById("next-bday-day").innerText = weekdays[nextBday.getDay()];
+
+      // Calculate time remaining to next birthday
+      let remDiffMs = nextBday.getTime() - target.getTime();
+      let remDays = Math.ceil(remDiffMs / (1000 * 60 * 60 * 24));
+
+      // Calculate relative months and days remaining
+      let remMonths = nextBday.getMonth() - target.getMonth();
+      let remDaysAdjusted = nextBday.getDate() - target.getDate();
+
+      if (remDaysAdjusted < 0) {
+        remMonths--;
+        const prevMonth = new Date(nextBday.getFullYear(), nextBday.getMonth(), 0);
+        remDaysAdjusted += prevMonth.getDate();
+      }
+
+      if (remMonths < 0) {
+        remMonths += 12;
+      }
+
+      document.getElementById("next-bday-months").innerText = remMonths;
+      document.getElementById("next-bday-days").innerText = remDaysAdjusted;
+
+      document.getElementById("next-birthday-card").classList.remove("hidden");
+
+      if (window.confetti) {
+        window.confetti({ particleCount: 30, spread: 60, colors: ["#06b6d4", "#3b82f6"] });
+      }
+    }
+  </script>
+</body>
+</html>

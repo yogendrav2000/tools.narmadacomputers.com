@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard Control Panel - Narmada Tools</title>
+  <meta name="description" content="View offline telemetry metrics, newsletter subscriptions, tool feature upvotes, and event logs.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools Control</span>
+      </a>
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-6">
+    
+    <!-- Title banner -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+          <i data-lucide="layout-dashboard" class="text-blue-600 w-6 h-6"></i>
+          <span>Admin Portal (Static Edition)</span>
+        </h1>
+        <p class="text-xs text-slate-450 dark:text-slate-400 mt-1">Local database logs parsed directly from browser sync configurations.</p>
+      </div>
+      <button onclick="clearAllData()" class="px-4 py-2 border border-red-200 dark:border-red-950/40 text-red-650 hover:bg-red-50 dark:hover:bg-red-950/20 text-xs font-semibold rounded-xl transition-colors flex items-center gap-1.5"><i data-lucide="trash-2" class="w-4 h-4"></i>Clear Telemetry Logs</button>
+    </div>
+
+    <!-- Stat Widgets -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Widget: Views -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
+        <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+          <i data-lucide="eye" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xs text-slate-450 dark:text-slate-400 font-medium">Telemetry Pageviews</span>
+          <span class="text-2xl font-black block mt-0.5 text-slate-800 dark:text-white" id="stat-views">0</span>
+        </div>
+      </div>
+
+      <!-- Widget: Subscribers -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
+        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+          <i data-lucide="users" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xs text-slate-450 dark:text-slate-400 font-medium">Newsletter Subscribers</span>
+          <span class="text-2xl font-black block mt-0.5 text-slate-800 dark:text-white" id="stat-subs">0</span>
+        </div>
+      </div>
+
+      <!-- Widget: Feature Votes -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex items-center space-x-4 shadow-sm">
+        <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+          <i data-lucide="thumbs-up" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xs text-slate-450 dark:text-slate-400 font-medium">Upcoming Feature Votes</span>
+          <span class="text-2xl font-black block mt-0.5 text-slate-800 dark:text-white" id="stat-votes">0</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Data Tables Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Table: Subscribers -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <h3 class="font-bold text-base border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4 text-emerald-600"></i><span>Subscribers List</span></h3>
+        <div class="overflow-x-auto max-h-72">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 font-bold uppercase">
+              <tr>
+                <th class="p-2.5">Email</th>
+                <th class="p-2.5">Subscribed Date</th>
+              </tr>
+            </thead>
+            <tbody id="subs-tbody">
+              <tr>
+                <td colspan="2" class="p-4 text-center text-slate-400">No subscribers synced yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Table: Votes -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <h3 class="font-bold text-base border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-1.5"><i data-lucide="thumbs-up" class="w-4 h-4 text-amber-600"></i><span>Tool Requests / Upvotes</span></h3>
+        <div class="overflow-x-auto max-h-72">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 dark:bg-slate-955 text-slate-700 dark:text-slate-300 font-bold uppercase">
+              <tr>
+                <th class="p-2.5">Tool ID</th>
+                <th class="p-2.5">Email</th>
+                <th class="p-2.5">Date</th>
+              </tr>
+            </thead>
+            <tbody id="votes-tbody">
+              <tr>
+                <td colspan="3" class="p-4 text-center text-slate-400">No feature votes synced yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Traffic telemetry logs -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+      <h3 class="font-bold text-base border-b border-slate-105 dark:border-slate-800 pb-2 flex items-center gap-1.5"><i data-lucide="history" class="w-4 h-4 text-blue-600"></i><span>Recent Activity Telemetry Logs</span></h3>
+      <div class="overflow-x-auto max-h-80">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 font-bold uppercase">
+            <tr>
+              <th class="p-2.5">Page/Tool</th>
+              <th class="p-2.5">Timestamp</th>
+              <th class="p-2.5">Referrer</th>
+              <th class="p-2.5">Device Browser Agent</th>
+            </tr>
+          </thead>
+          <tbody id="telemetry-tbody">
+            <tr>
+              <td colspan="4" class="p-4 text-center text-slate-400">No telemetry logs tracked yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools Admin Control.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStats();
+    });
+
+    function loadStats() {
+      // 1. Telemetry logs
+      const telemetry = JSON.parse(localStorage.getItem("narmada_tools_telemetry") || "[]").reverse();
+      document.getElementById("stat-views").innerText = telemetry.length;
+
+      const telemetryTbody = document.getElementById("telemetry-tbody");
+      if (telemetry.length > 0) {
+        telemetryTbody.innerHTML = telemetry.map(log => {
+          return `
+            <tr class="border-b border-slate-100 dark:border-slate-900 last:border-b-0">
+              <td class="p-2.5 font-semibold text-slate-700 dark:text-slate-300">${log.page}</td>
+              <td class="p-2.5 text-slate-450">${new Date(log.timestamp).toLocaleString()}</td>
+              <td class="p-2.5 text-slate-450 truncate max-w-xs">${log.referrer}</td>
+              <td class="p-2.5 text-slate-450 truncate max-w-xs" title="${log.userAgent}">${log.userAgent}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // 2. Subscribers
+      const subs = JSON.parse(localStorage.getItem("narmada_tools_subscribers") || "[]").reverse();
+      document.getElementById("stat-subs").innerText = subs.length;
+
+      const subsTbody = document.getElementById("subs-tbody");
+      if (subs.length > 0) {
+        subsTbody.innerHTML = subs.map(sub => {
+          return `
+            <tr class="border-b border-slate-100 dark:border-slate-900 last:border-b-0">
+              <td class="p-2.5 font-semibold text-slate-700 dark:text-slate-300">${sub.email}</td>
+              <td class="p-2.5 text-slate-450">${new Date(sub.timestamp).toLocaleString()}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // 3. Upvotes
+      const votes = JSON.parse(localStorage.getItem("narmada_tools_votes") || "[]").reverse();
+      document.getElementById("stat-votes").innerText = votes.length;
+
+      const votesTbody = document.getElementById("votes-tbody");
+      if (votes.length > 0) {
+        votesTbody.innerHTML = votes.map(vote => {
+          return `
+            <tr class="border-b border-slate-100 dark:border-slate-900 last:border-b-0">
+              <td class="p-2.5 font-semibold text-cyan-600 dark:text-cyan-400 capitalize">${vote.toolId.replace("#","").replace("-"," ")}</td>
+              <td class="p-2.5 text-slate-700 dark:text-slate-300">${vote.email}</td>
+              <td class="p-2.5 text-slate-450">${new Date(vote.timestamp).toLocaleString()}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+    }
+
+    function clearAllData() {
+      if (confirm("Are you sure you want to clear all telemetry logs? This cannot be undone.")) {
+        localStorage.removeItem("narmada_tools_telemetry");
+        localStorage.removeItem("narmada_tools_telemetry_events");
+        loadStats();
+      }
+    }
+  </script>
+</body>
+</html>

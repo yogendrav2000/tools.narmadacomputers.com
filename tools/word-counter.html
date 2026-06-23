@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Word Counter - Count Words & Characters Online - Narmada Tools</title>
+  <meta name="description" content="Calculate word counts, characters, sentences, paragraphs, reading times, and keyword frequencies. Free, fast, and secure offline execution.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <nav class="hidden lg:flex items-center space-x-6">
+          <a href="../index.html#categories" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Categories</a>
+          <a href="../blog/index.html" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 transition-colors">Blog</a>
+          
+        </nav>
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-600 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/text.html" class="hover:text-blue-600 transition-colors">Text Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Word Counter</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Input Area (2 Columns) -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+              <i data-lucide="text-cursor" class="text-blue-600 w-5 h-5"></i>
+              <span>Word Counter</span>
+            </h1>
+            <div class="flex gap-2">
+              <button onclick="pasteText()" class="px-3 py-1.5 border border-slate-250 dark:border-slate-800 text-xs font-semibold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-950 transition-colors flex items-center gap-1">
+                <i data-lucide="clipboard-paste" class="w-3.5 h-3.5"></i>
+                <span>Paste</span>
+              </button>
+              <button onclick="clearAll()" class="px-3 py-1.5 border border-red-200 dark:border-red-950 text-red-650 text-xs font-semibold rounded-lg hover:bg-red-50 dark:hover:bg-red-950/25 transition-colors flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+
+          <textarea id="word-textarea" placeholder="Start typing, or paste your document text here..." class="w-full h-80 p-4 border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50 dark:bg-slate-950 dark:text-slate-100 transition-all font-mono text-sm resize-none" oninput="processCounters()"></textarea>
+
+          <div class="flex justify-end gap-2 mt-4">
+            <button onclick="copyCurrentText()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+              <span>Copy Input Text</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Density Analysis Table -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h3 class="font-bold text-base mb-4 flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="text-blue-600 w-4 h-4"></i>
+            <span>Word Frequency / Density Analysis</span>
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-500 dark:text-slate-400">
+              <thead class="bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 text-xs uppercase">
+                <tr>
+                  <th class="p-3">Keyword</th>
+                  <th class="p-3">Occurrences</th>
+                  <th class="p-3">Density Ratio</th>
+                </tr>
+              </thead>
+              <tbody id="density-tbody">
+                <tr>
+                  <td colspan="3" class="p-4 text-center text-xs text-slate-400">No words analyzed yet. Type in the editor above.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Statistics (1 Column) -->
+      <div class="space-y-6">
+        
+        <!-- Ad block placeholder -->
+        <div class="border border-dashed border-slate-300 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h2 class="font-bold text-lg mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
+            <i data-lucide="gauge" class="text-blue-600 w-5 h-5"></i>
+            <span>Real-time Metrics</span>
+          </h2>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-900">
+              <span class="text-2xl font-black text-blue-650" id="metric-words">0</span>
+              <span class="text-xs text-slate-500 block mt-1">Words</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-900">
+              <span class="text-2xl font-black text-blue-650" id="metric-chars">0</span>
+              <span class="text-xs text-slate-500 block mt-1">Chars (with spaces)</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-900">
+              <span class="text-2xl font-black text-blue-650" id="metric-nospaces">0</span>
+              <span class="text-xs text-slate-500 block mt-1">Chars (no spaces)</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-900">
+              <span class="text-2xl font-black text-blue-650" id="metric-sentences">0</span>
+              <span class="text-xs text-slate-500 block mt-1">Sentences</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-900">
+              <span class="text-2xl font-black text-blue-650" id="metric-paragraphs">0</span>
+              <span class="text-xs text-slate-500 block mt-1">Paragraphs</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-900">
+              <span class="text-2xl font-black text-blue-650" id="metric-readtime">0m</span>
+              <span class="text-xs text-slate-500 block mt-1">Est. Reading Time</span>
+            </div>
+          </div>
+          
+          <div class="mt-6 border-t border-slate-100 dark:border-slate-800 pt-4 space-y-2 text-sm text-slate-500">
+            <div class="flex justify-between">
+              <span>Estimated speaking time:</span>
+              <span class="font-semibold text-slate-800 dark:text-slate-200" id="speaking-time">0 seconds</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Script Imports -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  
+  <script>
+    // Paste clipboard helper
+    async function pasteText() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById("word-textarea").value = text;
+        processCounters();
+      } catch (err) {
+        console.error("Paste permission denied: ", err);
+      }
+    }
+
+    // Clear textarea
+    function clearAll() {
+      document.getElementById("word-textarea").value = "";
+      processCounters();
+    }
+
+    // Copy input text
+    function copyCurrentText() {
+      const text = document.getElementById("word-textarea").value;
+      if (!text) return;
+      window.copyToClipboard(text);
+      window.trackToolEvent("word-counter", "copy");
+    }
+
+    // Words Density Logic
+    function processCounters() {
+      const textarea = document.getElementById("word-textarea");
+      const text = textarea.value;
+      
+      // Calculate length metrics
+      const totalChars = text.length;
+      const noSpacesChars = text.replace(/\s+/g, '').length;
+      
+      // Words calculation
+      const wordsArray = text.trim().split(/\s+/).filter(w => w.length > 0);
+      const wordCount = wordsArray.length;
+      
+      // Sentences calculation (split on . ! ?)
+      const sentencesArray = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+      const sentenceCount = sentencesArray.length;
+
+      // Paragraphs calculation (split on double newline)
+      const paragraphsArray = text.split(/\n+/).filter(p => p.trim().length > 0);
+      const paragraphCount = paragraphsArray.length;
+
+      // Reading times (average 200 words per minute)
+      const readingMinutes = Math.ceil(wordCount / 200);
+      const readingFormatted = wordCount > 0 ? `${readingMinutes}m` : "0m";
+
+      // Speaking time (average 130 words per minute)
+      const speakingSeconds = Math.ceil((wordCount / 130) * 60);
+      const speakingFormatted = wordCount > 0 ? `${speakingSeconds}s` : "0s";
+
+      // Update HTML UI elements
+      document.getElementById("metric-words").innerText = wordCount;
+      document.getElementById("metric-chars").innerText = totalChars;
+      document.getElementById("metric-nospaces").innerText = noSpacesChars;
+      document.getElementById("metric-sentences").innerText = sentenceCount;
+      document.getElementById("metric-paragraphs").innerText = paragraphCount;
+      document.getElementById("metric-readtime").innerText = readingFormatted;
+      document.getElementById("speaking-time").innerText = speakingFormatted;
+
+      // Keyword Density Table Builder
+      const densityTbody = document.getElementById("density-tbody");
+      if (wordCount === 0) {
+        densityTbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-xs text-slate-400">No words analyzed yet. Type in the editor above.</td></tr>`;
+        return;
+      }
+
+      // Filter punctuation, convert to lowercase, ignore short words (length < 3) and standard helper words
+      const wordMap = {};
+      const ignoreList = new Set(["the", "and", "this", "that", "with", "from", "for", "your", "they", "them", "their"]);
+      
+      wordsArray.forEach(w => {
+        const cleanWord = w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+        if (cleanWord.length > 2 && !ignoreList.has(cleanWord)) {
+          wordMap[cleanWord] = (wordMap[cleanWord] || 0) + 1;
+        }
+      });
+
+      // Sort keywords by frequency
+      const sortedKeywords = Object.entries(wordMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      
+      if (sortedKeywords.length === 0) {
+        densityTbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-xs text-slate-400">No repetitive keywords detected.</td></tr>`;
+      } else {
+        densityTbody.innerHTML = sortedKeywords.map(([word, freq]) => {
+          const ratio = ((freq / wordCount) * 100).toFixed(1);
+          return `
+            <tr class="border-b border-slate-100 dark:border-slate-900">
+              <td class="p-3 font-semibold text-slate-700 dark:text-slate-350 capitalize">${word}</td>
+              <td class="p-3">${freq}</td>
+              <td class="p-3">${ratio}%</td>
+            </tr>
+          `;
+        }).join("");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free PDF Merger - Combine PDF Files Online - Narmada Tools</title>
+  <meta name="description" content="Merge multiple PDF files in any order into a single PDF document. Safe, secure offline compilation. No server uploads.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- pdf-lib CDN -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/pdf.html" class="hover:text-blue-650 transition-colors">PDF Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">Merge PDF</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Upload area & file list (2 columns) -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Upload Box -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h1 class="text-xl font-bold flex items-center gap-2 mb-6">
+            <i data-lucide="folder-git" class="text-rose-600 w-5 h-5"></i>
+            <span>Merge PDF Documents</span>
+          </h1>
+
+          <div id="drop-zone" class="border-2 border-dashed border-slate-250 dark:border-slate-800 rounded-xl p-8 text-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-950/30 transition-all flex flex-col items-center justify-center relative min-h-48" onclick="triggerFileSelect()">
+            <input type="file" id="pdf-input" accept="application/pdf" multiple class="hidden" onchange="handleFileSelect(event)">
+            
+            <div class="space-y-3">
+              <div class="w-12 h-12 bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="file-plus" class="w-6 h-6"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">Drag & drop multiple PDF files here, or click to upload</p>
+              <p class="text-xs text-slate-450 dark:text-slate-555">Choose 2 or more files. Processed locally in-browser.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- File List Reordering Card -->
+        <div id="file-list-card" class="hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+          <h3 class="font-bold text-base flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+            <span>Uploaded Documents Order</span>
+            <span class="text-xs text-slate-400" id="file-count-label">0 files</span>
+          </h3>
+
+          <!-- Draggable/Reorderable List Container -->
+          <div id="pdf-files-container" class="space-y-2.5"></div>
+
+          <div class="flex justify-end gap-3 border-t border-slate-100 dark:border-slate-850 pt-4">
+            <button onclick="clearFiles()" class="px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-xs font-semibold rounded-xl transition-colors">Clear All</button>
+            <button onclick="mergePdfs()" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-rose-500/10">
+              <i data-lucide="merge" class="w-4 h-4"></i>
+              <span>Merge & Download</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Information Sidebar -->
+      <div class="space-y-6">
+        <div class="border border-dashed border-slate-300 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h2 class="font-bold text-base mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Privacy & PDF Merging</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-450 leading-relaxed">
+            Other PDF tools require uploading entire contracts, bank statements, or certificates to external servers. Narmada Tools compiles standard documents locally inside your browser sandbox. Your personal documents are never uploaded.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Processing Spinner Overlay -->
+  <div id="loading-overlay" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-xs text-center border border-slate-200 dark:border-slate-800">
+      <div class="w-12 h-12 border-4 border-rose-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">Compiling PDF Files...</p>
+      <p class="text-xs text-slate-400 mt-1">This runs offline on your processor. Please wait.</p>
+    </div>
+  </div>
+
+  <footer class="mt-auto bg-slate-900 text-slate-550 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let uploadedFiles = [];
+
+    function triggerFileSelect() {
+      document.getElementById("pdf-input").click();
+    }
+
+    function handleFileSelect(e) {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+      addFiles(files);
+    }
+
+    // Drag & drop
+    const dropZone = document.getElementById("drop-zone");
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("bg-rose-50/40", "dark:bg-rose-950/20");
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("bg-rose-50/40", "dark:bg-rose-950/20");
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("bg-rose-50/40", "dark:bg-rose-950/20");
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type === "application/pdf");
+      if (files.length > 0) {
+        addFiles(files);
+      }
+    });
+
+    function addFiles(files) {
+      uploadedFiles = uploadedFiles.concat(files);
+      renderFileList();
+    }
+
+    function clearFiles() {
+      uploadedFiles = [];
+      document.getElementById("pdf-input").value = "";
+      renderFileList();
+    }
+
+    function removeFile(index) {
+      uploadedFiles.splice(index, 1);
+      renderFileList();
+    }
+
+    function moveFile(index, direction) {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= uploadedFiles.length) return;
+      
+      // Swap elements
+      const temp = uploadedFiles[index];
+      uploadedFiles[index] = uploadedFiles[targetIndex];
+      uploadedFiles[targetIndex] = temp;
+      
+      renderFileList();
+    }
+
+    function renderFileList() {
+      const container = document.getElementById("pdf-files-container");
+      const card = document.getElementById("file-list-card");
+      
+      if (uploadedFiles.length === 0) {
+        card.classList.add("hidden");
+        return;
+      }
+
+      card.classList.remove("hidden");
+      document.getElementById("file-count-label").innerText = `${uploadedFiles.length} file${uploadedFiles.length > 1 ? "s" : ""}`;
+
+      container.innerHTML = uploadedFiles.map((file, idx) => {
+        return `
+          <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl">
+            <div class="flex items-center space-x-3 overflow-hidden">
+              <i data-lucide="file" class="w-5 h-5 text-rose-600 flex-shrink-0"></i>
+              <div class="overflow-hidden">
+                <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 truncate">${file.name}</h4>
+                <p class="text-xs text-slate-400 mt-0.5">${window.formatSize(file.size)}</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+              <!-- Reorder Buttons -->
+              <button onclick="moveFile(${idx}, -1)" ${idx === 0 ? "disabled" : ""} class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-900 rounded disabled:opacity-30">
+                <i data-lucide="chevron-up" class="w-4 h-4"></i>
+              </button>
+              <button onclick="moveFile(${idx}, 1)" ${idx === uploadedFiles.length - 1 ? "disabled" : ""} class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-900 rounded disabled:opacity-30">
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+              <!-- Remove -->
+              <button onclick="removeFile(${idx})" class="p-1.5 hover:bg-red-50 dark:hover:bg-red-950/20 text-red-650 rounded">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    async function mergePdfs() {
+      if (uploadedFiles.length < 2) {
+        alert("Please upload at least 2 PDF files to merge.");
+        return;
+      }
+
+      document.getElementById("loading-overlay").classList.remove("hidden");
+
+      try {
+        const { PDFDocument } = PDFLib;
+        const mergedPdf = await PDFDocument.create();
+
+        for (const file of uploadedFiles) {
+          const bytes = await file.arrayBuffer();
+          const pdf = await PDFDocument.load(bytes);
+          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+
+        const mergedPdfBytes = await mergedPdf.save();
+        
+        // Trigger file download
+        const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "merged-narmada_tools.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        document.getElementById("loading-overlay").classList.add("hidden");
+
+        if (window.confetti) {
+          window.confetti({ particleCount: 60, spread: 60, colors: ["#f43f5e", "#fb7185"] });
+        }
+        window.trackToolEvent("merge-pdf", "merge");
+      } catch (err) {
+        console.error("PDF Merge failure: ", err);
+        alert("Failed to merge PDF files. Ensure files are valid and not password protected.");
+        document.getElementById("loading-overlay").classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>

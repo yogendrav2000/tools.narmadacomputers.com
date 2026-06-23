@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free JSON Formatter - Validate, Format & Prettify JSON - Narmada Tools</title>
+  <meta name="description" content="Format, validate, parse, and minify JSON data structures offline. Clear syntax validation check logs. 100% private.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <img src="../logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <div class="flex items-center space-x-4">
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+      <a href="../index.html" class="hover:text-blue-650 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <a href="../categories/developer.html" class="hover:text-blue-650 transition-colors">Developer Tools</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-300 font-medium">JSON Formatter</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Interactive Inputs -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+              <i data-lucide="braces" class="text-violet-600 w-5 h-5"></i>
+              <span>JSON Formatter & Validator</span>
+            </h1>
+            <div class="flex gap-2">
+              <button onclick="clearField()" class="text-xs px-3 py-1.5 border border-red-200 dark:border-red-950 text-red-650 font-bold rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">Reset</button>
+            </div>
+          </div>
+
+          <textarea id="json-input" placeholder="Paste your raw JSON code block here..." class="w-full h-80 p-4 border border-slate-250 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50 dark:bg-slate-950 dark:text-slate-100 transition-all font-mono text-xs resize-none" oninput="validateJsonInput()"></textarea>
+
+          <div class="mt-4 flex flex-wrap gap-2.5 border-t border-slate-100 dark:border-slate-800 pt-4">
+            <button onclick="formatJson(2)" class="px-4 py-2.5 bg-violet-650 hover:bg-violet-700 text-white text-xs font-semibold rounded-xl transition-colors">Format JSON (2 spaces)</button>
+            <button onclick="formatJson(4)" class="px-4 py-2.5 bg-violet-650 hover:bg-violet-700 text-white text-xs font-semibold rounded-xl transition-colors">Format JSON (4 spaces)</button>
+            <button onclick="minifyJson()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-900 text-xs font-semibold rounded-xl transition-colors text-slate-700 dark:text-slate-300">Minify / Compress</button>
+          </div>
+        </div>
+
+        <!-- Output JSON area -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Formatted Results</label>
+          <textarea id="json-output" readonly placeholder="Output JSON will render here..." class="w-full h-80 p-4 border border-slate-250 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-955 dark:text-slate-150 transition-all font-mono text-xs resize-none"></textarea>
+          
+          <div class="flex justify-end gap-2 mt-4">
+            <button onclick="downloadJson()" class="px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-xs font-semibold rounded-xl transition-colors flex items-center gap-1.5"><i data-lucide="download" class="w-4 h-4"></i>Download (.json)</button>
+            <button onclick="copyJson()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+              <span>Copy JSON</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live validation logs (1 column) -->
+      <div class="space-y-6">
+        
+        <!-- Status validation banner -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <h3 class="font-bold text-base mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Syntax Validator</h3>
+          
+          <div id="validation-status" class="p-4 rounded-xl text-xs font-bold flex items-center gap-2 bg-slate-50 dark:bg-slate-950 text-slate-550 border border-slate-100 dark:border-slate-900">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <span>Waiting for JSON input...</span>
+          </div>
+
+          <div id="validation-logs" class="hidden mt-4 text-xs font-mono p-3 bg-red-50 dark:bg-red-950/20 text-red-650 rounded-lg break-all"></div>
+        </div>
+
+        <div class="border border-dashed border-slate-350 dark:border-slate-800 p-6 rounded-2xl bg-white dark:bg-slate-900/50 flex flex-col justify-center items-center h-48">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-slate-400 mb-2"></i>
+          <span class="text-xs text-slate-500 uppercase tracking-widest text-center">Sponsored Advertisement</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="mt-auto bg-slate-900 text-slate-555 border-t border-slate-800 py-6 text-center text-xs">
+    <p>&copy; 2026 Narmada Tools. Secure Offline Utilities Hub.</p>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function clearField() {
+      document.getElementById("json-input").value = "";
+      document.getElementById("json-output").value = "";
+      validateJsonInput();
+    }
+
+    function validateJsonInput() {
+      const input = document.getElementById("json-input").value.trim();
+      const statusBanner = document.getElementById("validation-status");
+      const logs = document.getElementById("validation-logs");
+
+      if (!input) {
+        statusBanner.className = "p-4 rounded-xl text-xs font-bold flex items-center gap-2 bg-slate-50 dark:bg-slate-950 text-slate-500 border border-slate-100 dark:border-slate-900";
+        statusBanner.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4"></i><span>Waiting for JSON input...</span>`;
+        logs.classList.add("hidden");
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      try {
+        JSON.parse(input);
+        statusBanner.className = "p-4 rounded-xl text-xs font-bold flex items-center gap-2 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border border-green-100 dark:border-green-950";
+        statusBanner.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i><span>Valid JSON Structure</span>`;
+        logs.classList.add("hidden");
+      } catch (err) {
+        statusBanner.className = "p-4 rounded-xl text-xs font-bold flex items-center gap-2 bg-red-50 dark:bg-red-950/30 text-red-750 dark:text-red-400 border border-red-100 dark:border-red-950";
+        statusBanner.innerHTML = `<i data-lucide="x-circle" class="w-4 h-4"></i><span>Invalid JSON Syntax</span>`;
+        logs.innerText = err.message;
+        logs.classList.remove("hidden");
+      }
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function formatJson(spaces) {
+      const input = document.getElementById("json-input").value.trim();
+      if (!input) return;
+
+      try {
+        const obj = JSON.parse(input);
+        document.getElementById("json-output").value = JSON.stringify(obj, null, spaces);
+        
+        if (window.confetti) {
+          window.confetti({ particleCount: 30, spread: 50, colors: ["#8b5cf6", "#a78bfa"] });
+        }
+        window.trackToolEvent("json-formatter", "format");
+      } catch (err) {
+        alert("Cannot format. Invalid JSON structure. Check syntax logs.");
+      }
+    }
+
+    function minifyJson() {
+      const input = document.getElementById("json-input").value.trim();
+      if (!input) return;
+
+      try {
+        const obj = JSON.parse(input);
+        document.getElementById("json-output").value = JSON.stringify(obj);
+        window.trackToolEvent("json-formatter", "minify");
+      } catch (err) {
+        alert("Cannot minify. Invalid JSON structure.");
+      }
+    }
+
+    function copyJson() {
+      const output = document.getElementById("json-output").value;
+      if (!output) return;
+      window.copyToClipboard(output);
+      window.trackToolEvent("json-formatter", "copy");
+    }
+
+    function downloadJson() {
+      const output = document.getElementById("json-output").value;
+      if (!output) return;
+      window.downloadFile(output, "data-formatted.json", "application/json");
+      window.trackToolEvent("json-formatter", "download");
+    }
+  </script>
+</body>
+</html>
