@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Narmada Tools</title>
+  <meta name="description" content="Privacy Policy for Narmada Tools. Read about our 100% browser-based secure execution and data protection.">
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Anti-flicker theme loader
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-200">
+  
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center space-x-2">
+        <img src="logo.jpg" alt="Narmada Tools Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/10">
+        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Narmada Tools</span>
+      </a>
+
+      <!-- Desktop Search Bar -->
+      <div class="hidden md:block relative w-96 max-w-lg">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+        <!-- Search Results Dropdown -->
+        <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-96 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-855 rounded-xl shadow-2xl z-50"></div>
+      </div>
+
+      <!-- Right menu controls -->
+      <div class="flex items-center space-x-4">
+        <nav class="hidden lg:flex items-center space-x-6">
+          <a href="index.html#categories" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 dark:hover:text-blue-450 transition-colors">Categories</a>
+          <a href="blog/index.html" class="text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 dark:hover:text-blue-450 transition-colors">Blog</a>
+        </nav>
+        
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-600"></i>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Open Menu">
+          <i data-lucide="menu" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 transition-colors">
+      <div class="space-y-3">
+        <!-- Search bar in mobile menu -->
+        <div class="relative w-full mb-4">
+          <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i>
+          <input type="text" placeholder="Search 120+ tools..." class="global-search-input w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+          <div class="search-results-dropdown hidden absolute top-full left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl shadow-xl z-50"></div>
+        </div>
+        <a href="index.html#categories" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Categories</a>
+        <a href="blog/index.html" class="block text-sm font-medium text-slate-600 dark:text-slate-350 hover:text-blue-600 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">Blog Articles</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-8">
+      <a href="index.html" class="hover:text-blue-600 transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-slate-800 dark:text-slate-250 font-medium">Privacy Policy</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mb-10 text-center md:text-left">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Privacy Policy</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-2">Last updated: June 23, 2026</p>
+    </div>
+
+    <!-- Content Card -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/85 rounded-3xl p-8 sm:p-12 shadow-sm leading-relaxed space-y-8 text-slate-700 dark:text-slate-300">
+      
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-5 h-5 text-blue-500"></i>
+          1. 100% Client-Side Privacy Sandbox
+        </h2>
+        <p>
+          At Narmada Tools, we take your data privacy with absolute seriousness. Unlike traditional utility websites that upload files, codes, or text blocks to remote backend servers for processing, <strong>Narmada Tools operates 100% locally in your web browser</strong>.
+        </p>
+        <p>
+          All operations—including PDF merging, image compression, code formatting, hashing, mathematical calculations, and parsing—use client-side JavaScript APIs (such as the File Reader and HTML5 Canvas). Your documents, input text, and image assets are never transmitted across the network, stored on our servers, or shared with third parties.
+        </p>
+      </section>
+
+      <section class="space-y-4 border-t border-slate-100 dark:border-slate-800/60 pt-8">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="database" class="w-5 h-5 text-emerald-500"></i>
+          2. Use of Local Browser Storage
+        </h2>
+        <p>
+          We utilize standard HTML5 Local Storage (localStorage) on your computer solely to improve your user experience:
+        </p>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+          <li><strong>Theme Preferences:</strong> Storing whether you prefer dark mode or light mode to prevent theme flickering when navigating between utility pages.</li>
+          <li><strong>Offline Subscriptions:</strong> Logging local newsletter subscriptions offline before syncing when internet connection permits.</li>
+          <li><strong>Local Telemetry:</strong> Storing local usage statistics to dynamically show popular or featured utility lists on the homepage.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-4 border-t border-slate-100 dark:border-slate-800/60 pt-8">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-5 h-5 text-violet-500"></i>
+          3. Analytics & Telemetry
+        </h2>
+        <p>
+          To analyze site usage and maintain performance, we track basic anonymous telemetry. This includes information such as pages visited, timestamps, referrer URLs, and browser types. None of this telemetry contains personally identifiable information, file contents, or input fields processed by the tools.
+        </p>
+      </section>
+
+      <section class="space-y-4 border-t border-slate-100 dark:border-slate-800/60 pt-8">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="globe" class="w-5 h-5 text-amber-500"></i>
+          4. Cookies and Advertising
+        </h2>
+        <p>
+          We may partner with third-party networks, such as Google AdSense, to display non-intrusive advertisements. These networks may use cookies (like the DART cookie) to serve ads based on your visits to our site and other sites on the internet. You can manage or disable cookie settings in your individual browser preferences.
+        </p>
+      </section>
+
+      <section class="space-y-4 border-t border-slate-100 dark:border-slate-800/60 pt-8">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="info" class="w-5 h-5 text-cyan-500"></i>
+          5. Contact Information
+        </h2>
+        <p>
+          If you have questions about this Privacy Policy or the security of our browser-based utility hub, feel free to contact us via the contact details provided on our main domain.
+        </p>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto bg-slate-900 dark:bg-slate-950 text-slate-400 border-t border-slate-800 py-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8">
+      
+      <!-- Brand & Mission -->
+      <div class="col-span-2 space-y-4">
+        <a href="index.html" class="flex items-center space-x-2 text-white">
+          <img src="logo.jpg" alt="Narmada Tools Logo" class="w-8 h-8 rounded-lg object-cover shadow-md">
+          <span class="text-lg font-bold">Narmada Tools</span>
+        </a>
+        <p class="text-sm text-slate-450 leading-relaxed max-w-sm">
+          Providing high-fidelity, client-side online tools to streamline code editing, image compression, metadata generation, and daily utility math securely.
+        </p>
+        <div class="flex items-center space-x-3 text-slate-500">
+          <i data-lucide="shield" class="w-4 h-4"></i>
+          <span class="text-xs">Offline Secure Calculations Enabled</span>
+        </div>
+      </div>
+
+      <!-- Categories Columns -->
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="categories/text.html" class="hover:text-white transition-colors">Text Tools</a></li>
+          <li><a href="categories/image.html" class="hover:text-white transition-colors">Image Compressors</a></li>
+          <li><a href="categories/pdf.html" class="hover:text-white transition-colors">PDF Integrations</a></li>
+          <li><a href="categories/seo.html" class="hover:text-white transition-colors">SEO Formulators</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Developers</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="categories/developer.html" class="hover:text-white transition-colors">Developer Formatters</a></li>
+          <li><a href="categories/utility.html" class="hover:text-white transition-colors">Utility Calculators</a></li>
+          <li><a href="blog/index.html" class="hover:text-white transition-colors">Blog Articles</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">AdSense Ready</h4>
+        <div class="border border-dashed border-slate-700/60 p-4 rounded-xl flex flex-col justify-center items-center h-28 bg-slate-900/50">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-slate-600 mb-1"></i>
+          <span class="text-[10px] text-slate-650 uppercase tracking-widest text-center">Sponsored Ads Space</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <p>&copy; 2026 Narmada Tools. All rights reserved. Self-contained cPanel static distribution.</p>
+      <div class="flex space-x-4">
+        <a href="index.html#categories" class="hover:underline">Categories Map</a>
+        <span>•</span>
+        <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+        <span>•</span>
+        <a href="disclaimer.html" class="hover:underline">Disclaimer</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Imports -->
+  <script src="js/utils.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
